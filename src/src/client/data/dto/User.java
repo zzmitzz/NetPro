@@ -1,7 +1,9 @@
 package src.client.data.dto;
 
-public class User {
-    
+import java.io.Serializable;
+
+public class User implements Serializable{
+    private static final long serialVersionUID = 1L;
     public User(String fullName, String username, String password, double score){
         this.fullName = fullName;
         this.username = username;
