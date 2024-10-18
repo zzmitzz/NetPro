@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/Users/1/Desktop/Sem1_4/LTM-PTIT-main/FinalExerciseNetworkProgramming/src/src/server/database_connection/ServerDBConnection.java</file>
+            <file>file:/C:/Users/1/Desktop/Sem1_4/LTM-PTIT-main/FinalExerciseNetworkProgramming/src/src/client/common/Response.java</file>
+            <file>file:/C:/Users/1/Desktop/Sem1_4/LTM-PTIT-main/FinalExerciseNetworkProgramming/src/src/client/presentation/play_game/CrosswordGameScreen.java</file>
+            <file>file:/C:/Users/1/Desktop/Sem1_4/LTM-PTIT-main/FinalExerciseNetworkProgramming/src/src/client/data/dto/User.java</file>
+            <file>file:/C:/Users/1/Desktop/Sem1_4/LTM-PTIT-main/FinalExerciseNetworkProgramming/src/src/server/usecase/onActionServer.java</file>
+            <file>file:/C:/Users/1/Desktop/Sem1_4/LTM-PTIT-main/FinalExerciseNetworkProgramming/src/src/client/data/ClientListenerHandler.java</file>
+            <file>file:/C:/Users/1/Desktop/Sem1_4/LTM-PTIT-main/FinalExerciseNetworkProgramming/src/src/server/ServerConnection.java</file>
+            <file>file:/C:/Users/1/Desktop/Sem1_4/LTM-PTIT-main/FinalExerciseNetworkProgramming/src/src/client/presentation/home_screen/HomeScreenController.java</file>
+            <file>file:/C:/Users/1/Desktop/Sem1_4/LTM-PTIT-main/FinalExerciseNetworkProgramming/src/src/client/presentation/home_screen/HomeScreen.java</file>
+            <file>file:/C:/Users/1/Desktop/Sem1_4/LTM-PTIT-main/FinalExerciseNetworkProgramming/src/src/client/common/BaseClientController.java</file>
+            <file>file:/C:/Users/1/Desktop/Sem1_4/LTM-PTIT-main/FinalExerciseNetworkProgramming/src/src/WelcomeScreen.java</file>
+            <file>file:/C:/Users/1/Desktop/Sem1_4/LTM-PTIT-main/FinalExerciseNetworkProgramming/src/src/Application.java</file>
+            <file>file:/C:/Users/1/Desktop/Sem1_4/LTM-PTIT-main/FinalExerciseNetworkProgramming/src/src/ResponseWrapper.java</file>
+            <file>file:/C:/Users/1/Desktop/Sem1_4/LTM-PTIT-main/FinalExerciseNetworkProgramming/src/src/server/usecase/ServerUsecase.java</file>
+            <file>file:/C:/Users/1/Desktop/Sem1_4/LTM-PTIT-main/FinalExerciseNetworkProgramming/src/src/server/Constant.java</file>
+            <file>file:/C:/Users/1/Desktop/Sem1_4/LTM-PTIT-main/FinalExerciseNetworkProgramming/src/src/client/presentation/login/LoginScreen.java</file>
+            <file>file:/C:/Users/1/Desktop/Sem1_4/LTM-PTIT-main/FinalExerciseNetworkProgramming/src/src/server/Server.java</file>
+        </group>
+    </open-files>
+</project-private>

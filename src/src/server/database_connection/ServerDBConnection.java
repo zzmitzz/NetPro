@@ -71,7 +71,7 @@ public class ServerDBConnection implements DBAction{
                 String usernameRes = rs.getString("username");
                 String passwordRes = rs.getString("password");
                 double score = rs.getDouble("score");
-                result = new User(fullnameRes,usernameRes,passwordRes,score);
+                result = new User(fullnameRes,usernameRes,passwordRes, score);
             }
             return result;
         } catch (Exception e) {

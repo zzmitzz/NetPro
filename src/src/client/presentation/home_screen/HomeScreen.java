@@ -42,7 +42,6 @@ public class HomeScreen extends JFrame {
         JButton randomButton = new JButton("Chơi random");
         JButton instructionButton = new JButton("Hướng dẫn");
         JButton logoutButton = new JButton("Đăng xuất");
-
         buttonPanel.add(inviteButton);
         buttonPanel.add(randomButton);
         buttonPanel.add(instructionButton);
@@ -56,7 +55,6 @@ public class HomeScreen extends JFrame {
 
         setVisible(true);
     }
-
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new HomeScreen());
     }

@@ -18,7 +18,4 @@ public class BaseClientController {
         }
         else return clientConnection;
     }
-//    void doRequest(String url, String data, Response response){
-//        clientConnection
-//    }
 }

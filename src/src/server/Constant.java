@@ -2,7 +2,6 @@
 package src.server;
 
 public class Constant {
-    
     private Constant(){};
     public static int portServer = 12335;
     public static String dbName = "scrapword";

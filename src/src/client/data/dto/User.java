@@ -1,5 +1,7 @@
 package src.client.data.dto;
 
+
+import src.client.data.dto.*;
 import java.io.Serializable;
 
 public class User implements Serializable{
@@ -11,10 +13,27 @@ public class User implements Serializable{
         this.score = score;
     }
     
-    public String fullName;
+    private String fullName;
     private String username;
     private String password;
     public double score = 0.0;
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public double getScore() {
+        return score;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+    
     
     
 }
