@@ -5,98 +5,134 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class CrosswordGameScreen {
+public class CrosswordGameScreen extends JFrame {
 
-    public static void main(String[] args) {
-        // Create the frame
-        JFrame frame = new JFrame("Trò chơi đoán ô chữ");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600, 500);
-        
-        // Create a panel for the form
-        JPanel panel = new JPanel();
-        panel.setLayout(null);  // Using null layout for manual positioning
-        frame.add(panel);
+    public CrosswordGameScreen() {
+        // Set up the frame properties
+        setTitle("Trò chơi đoán ô chữ");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(600, 500);
+        setLocationRelativeTo(null); // Center the frame on the screen
+        setResizable(false);
 
-        // Create the grid for the crossword puzzle
+        // Create a main panel with a background color
+        JPanel mainPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                // Set gradient background
+                Graphics2D g2d = (Graphics2D) g;
+                GradientPaint gp = new GradientPaint(0, 0, new Color(255, 204, 204), 0, getHeight(), new Color(204, 204, 255));
+                g2d.setPaint(gp);
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+        mainPanel.setLayout(new BorderLayout());
+        add(mainPanel);
+
+        // Create a panel for the crossword grid with rounded corners
         JPanel gridPanel = new JPanel();
         gridPanel.setLayout(new GridLayout(10, 10));  // 10x10 grid
-        gridPanel.setBounds(50, 20, 500, 250);  // Position and size
-        
+        gridPanel.setBackground(Color.WHITE);
+        gridPanel.setBorder(BorderFactory.createLineBorder(new Color(0, 51, 102), 3));
+        gridPanel.setPreferredSize(new Dimension(500, 250));  // Adjust size for better layout
+
         // Add 100 JLabels representing the grid cells
         for (int i = 0; i < 100; i++) {
             JLabel label = new JLabel();
             label.setOpaque(true);
             label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
             label.setBackground(Color.GREEN);  // Set the background color to green
+            label.setPreferredSize(new Dimension(40, 40));
+            label.setHorizontalAlignment(SwingConstants.CENTER);
             gridPanel.add(label);
         }
-        panel.add(gridPanel);
 
-        // Round and timer labels
-        JLabel roundLabel = new JLabel("Vòng 1:");
-        roundLabel.setBounds(50, 280, 60, 25);
-        panel.add(roundLabel);
-        
-        JLabel timerLabel = new JLabel("00:30");
-        timerLabel.setBounds(120, 280, 60, 25);
-        panel.add(timerLabel);
-        
+        mainPanel.add(gridPanel, BorderLayout.CENTER);
+
+        // Create a panel for controls
+        JPanel controlPanel = new JPanel();
+        controlPanel.setLayout(new GridLayout(5, 2));  // 5 rows, 2 columns
+        controlPanel.setBackground(new Color(255, 255, 255, 150)); // Semi-transparent white
+        mainPanel.add(controlPanel, BorderLayout.SOUTH);
+
+        // Username label
+        JLabel usernameLabel = new JLabel("Tên người chơi:");
+        usernameLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        controlPanel.add(usernameLabel);
+
+        JTextField usernameField = new JTextField(20);
+        usernameField.setEditable(false);  // Non-editable field
+        controlPanel.add(usernameField);
+
+        // Points label
+        JLabel pointsLabel = new JLabel("Điểm số:");
+        pointsLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        controlPanel.add(pointsLabel);
+
+        JLabel pointsValueLabel = new JLabel("0");  // Starting points
+        pointsValueLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        controlPanel.add(pointsValueLabel);
+
+        // Round label
+        JLabel roundLabel = new JLabel("Vòng:");
+        roundLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        controlPanel.add(roundLabel);
+
+        JLabel roundValueLabel = new JLabel("1");  // Starting round
+        roundValueLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        controlPanel.add(roundValueLabel);
+
         // Question label
         JLabel questionLabel = new JLabel("Câu hỏi:");
-        questionLabel.setBounds(50, 320, 60, 25);
-        panel.add(questionLabel);
-        
+        questionLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        controlPanel.add(questionLabel);
+
         JTextField questionField = new JTextField(20);
-        questionField.setBounds(120, 320, 300, 25);
         questionField.setEditable(false);  // Non-editable field
-        panel.add(questionField);
+        controlPanel.add(questionField);
+
+        // Word input label
+        JLabel wordInputLabel = new JLabel("Nhập từ:");
+        wordInputLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        controlPanel.add(wordInputLabel);
+
+        // Word input text field
+        JTextField wordInputField = new JTextField(20);
+        controlPanel.add(wordInputField);
 
         // Confirm button
         JButton confirmButton = new JButton("Xác nhận");
-        confirmButton.setBounds(440, 320, 100, 25);
-        panel.add(confirmButton);
-
-        // Add listener for confirm button
+        confirmButton.setBackground(new Color(0, 51, 102));
+        confirmButton.setForeground(Color.WHITE);
+        confirmButton.setFont(new Font("Arial", Font.BOLD, 14));
+        confirmButton.setFocusPainted(false);
+        confirmButton.setBorderPainted(false);
+        confirmButton.setPreferredSize(new Dimension(100, 30));
         confirmButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Handle confirm button click
+                // You can add your confirmation logic here
+                JOptionPane.showMessageDialog(CrosswordGameScreen.this, "Xác nhận thành công!");
             }
         });
-
-        // Word input label and text field
-        JLabel wordInputLabel = new JLabel("Nhập từ:");
-        wordInputLabel.setBounds(50, 360, 60, 25);
-        panel.add(wordInputLabel);
-        
-        JTextField wordInputField = new JTextField(20);
-        wordInputField.setBounds(120, 360, 300, 25);
-        panel.add(wordInputField);
+        controlPanel.add(confirmButton);
 
         // Dropdown for row/column selection
         String[] directions = { "Cột ngang", "Cột dọc" };
         JComboBox<String> directionDropdown = new JComboBox<>(directions);
-        directionDropdown.setBounds(440, 360, 100, 25);
-        panel.add(directionDropdown);
-
-        // Add listener for word input field
-        wordInputField.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Handle word input changes
-            }
-        });
-
-        // Add listener for dropdown selection
-        directionDropdown.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Handle direction dropdown changes
-            }
-        });
+        controlPanel.add(directionDropdown);
 
         // Set frame visibility
-        frame.setVisible(true);
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        // Create an instance of the CrosswordGameScreen to display it
+        SwingUtilities.invokeLater(() -> {
+            CrosswordGameScreen gameScreen = new CrosswordGameScreen();
+            gameScreen.setVisible(true);
+        });
     }
 }

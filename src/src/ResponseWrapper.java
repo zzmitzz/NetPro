@@ -2,9 +2,9 @@ package src;
 
 public class ResponseWrapper {
 
-    private String type;
-    private String data;
-    private String route;
+    public String type;
+    public String data;
+    public String route;
 
     public ResponseWrapper(String type, String data, String route) {
         this.type = type;

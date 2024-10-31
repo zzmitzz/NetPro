@@ -49,7 +49,7 @@ public class ServerDBConnection implements DBAction{
                 String password = rs.getString("password");
                 double score = rs.getDouble("score");
                 result.add(new User(fullname,username,password,score));
-                return result;
+                System.out.println(fullname);
             }
         } catch (Exception e) {
             System.out.println(e);

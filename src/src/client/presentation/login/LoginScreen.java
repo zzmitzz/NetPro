@@ -1,21 +1,40 @@
-
 package src.client.presentation.login;
-// CHAT GPT
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import src.client.common.LoadingDialog;
+import src.client.data.dto.User;
 import src.client.presentation.home_screen.HomeScreen;
 
-public class LoginScreen {
-    private static String username = "";
-    private static String password = "";
+public class LoginScreen implements LoginScreenController.onActionResponse{
+    private String username = "";
+    private String password = "";
+    private LoginScreenController controller ;
+    private JFrame frame;
+    LoadingDialog loadingDialog ;
     
-    private static String getTextFromDocumentEvent(DocumentEvent e) {
+    
+    
+    private LoginScreenController getController() throws IOException{
+        if(controller == null){
+            controller = new LoginScreenController(this);
+            return controller;
+        }
+        return controller;
+    }
+    
+    private String getTextFromDocumentEvent(DocumentEvent e) {
         Document doc = e.getDocument();
         int offset = e.getOffset();
         int length = e.getLength();
@@ -27,13 +46,44 @@ public class LoginScreen {
             return ""; // Return empty string if something goes wrong
         }
     }
-    
-    public static void main(String[] args) {
+    public LoginScreen(){
         // Create the frame
-        JFrame frame = new JFrame("Trò chơi đoán ô chữ");
+        frame = new JFrame("Trò chơi đoán ô chữ");
+        frame.addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) {}
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                System.out.println("Window is closing");
+                // Optional: Show confirmation dialog
+                int confirmed = JOptionPane.showConfirmDialog(null, 
+                        "Are you sure you want to exit?", "Exit Confirmation",
+                        JOptionPane.YES_NO_OPTION);
+
+                if (confirmed == JOptionPane.YES_OPTION) {
+                    frame.dispose();
+                    System.exit(0);  // Exits the application
+                }
+
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+
+            }
+            @Override
+            public void windowIconified(WindowEvent e) {}
+            @Override
+            public void windowDeiconified(WindowEvent e) {}
+            @Override
+            public void windowActivated(WindowEvent e) {}
+            @Override
+            public void windowDeactivated(WindowEvent e) {}
+        });
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 300);
-        
+        loadingDialog = new LoadingDialog(frame);
         // Create a panel for the form
         JPanel panel = new JPanel();
         panel.setLayout(null);  // Using null layout for manual positioning
@@ -117,8 +167,7 @@ public class LoginScreen {
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                frame.dispose();
-                HomeScreen a = new HomeScreen();
+                        
             }
         });
         
@@ -126,11 +175,34 @@ public class LoginScreen {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Handle login button click
+                try {
+                    getController().onLogin(username, password);
+                } catch (IOException ex) {
+                    Logger.getLogger(LoginScreen.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
-        
         // Set the frame visibility
         frame.setVisible(true);
+    }
+
+    @Override
+    public void loginCallback(User user) {
+        frame.dispose();
+        try {
+
+            new HomeScreen(user);
+            getController().onCloseLiveUpdate(getController().getClass().getName());
+            getController().callbackAction = null;
+            controller = null;
+        } catch (IOException ex) {
+            Logger.getLogger(LoginScreen.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex);
+        }
+
+    }
+    
+    @Override
+    public void registerCallback() {
     }
 }
