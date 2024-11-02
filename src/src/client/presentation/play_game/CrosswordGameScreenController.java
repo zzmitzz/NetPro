@@ -15,11 +15,20 @@ public class CrosswordGameScreenController extends BaseClientController {
     private final onActionResponse listener;
     public interface onActionResponse {
         void onStartGame();
-        void onReceiveQuestion(int level, String question);
+        void onReceiveQuestion(int id, String question);
         void onAnswerResult(double point, boolean status);
-        void onEndGame();
+        void onEndGame(boolean stateResult);
     }
-    
+
+    public void postAnswer(int idQuestion, String answerInput, String questionType){
+        JsonObject body = new JsonObject();
+        body.addProperty("id", idQuestion );
+        body.addProperty("answer", answerInput);
+        body.addProperty("timeStamp","" + System.currentTimeMillis());
+        body.addProperty("type", questionType);
+        doJsonRequest(body.toString(), "/postAnswer");
+    }
+
     public CrosswordGameScreenController(onActionResponse action) throws IOException{
         this.listener = action;
         callbackAction = new onAction(){
@@ -27,24 +36,15 @@ public class CrosswordGameScreenController extends BaseClientController {
             public void onSuccess(String data) {
                 ResponseWrapper rp = gson.fromJson(JsonParser.parseString(data), ResponseWrapper.class);
                 String route = rp.route;
-                System.out.println("CrosswordGameScreenController receive data: " + rp.data);
-                if(rp.data.equals("/onStartGame")){
-                    listener.onStartGame();
-                }
-                if(rp.data.equals("/onReceiveQuestion")){
+                if(route.equals("/postQuestion")){
                     JsonObject parseData = gson.fromJson(rp.data, JsonObject.class);
-                    int level = parseData.get("level").getAsInt();
-                    String question = parseData.get("question").getAsString();
-                    listener.onReceiveQuestion(level, question);
+                    listener.onReceiveQuestion(parseData.get("id").getAsInt(), parseData.get("question").getAsString());
                 }
-                if(rp.data.equals("/onAnswerResult")){
-                    JsonObject parseData = gson.fromJson(rp.data, JsonObject.class);
-                    double point = parseData.get("point").getAsDouble();
-                    boolean status = parseData.get("status").getAsBoolean();
-                    listener.onAnswerResult(point, status);
+                if(route.equals("/endGame")){
+                    listener.onEndGame(gson.fromJson(rp.data, JsonObject.class).get("status").getAsBoolean());
                 }
-                if(rp.data.equals("/onEndGame")){
-                    listener.onEndGame();
+                if(route.equals("/sendQuestion")){
+
                 }
             }
             @Override
@@ -57,5 +57,7 @@ public class CrosswordGameScreenController extends BaseClientController {
 
             }
         };
+        onStartLiveUpdate(getClass().toString());
+
     }
 }

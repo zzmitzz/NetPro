@@ -154,8 +154,15 @@ public class HomeScreen extends JFrame implements HomeScreenController.onActionR
     @Override
     public void onPlayGameState(boolean status) {
         if(status){
-            new CrosswordGameScreen();
             dispose();
+            try{
+                new CrosswordGameScreen(user);
+                controller.onCloseLiveUpdate(controller.getClass().getName());
+                controller.callbackAction = null;
+                controller = null;
+            }catch (Exception e){
+
+            }
         }else{
             NotificationDialog dialog = new NotificationDialog("Người chơi hiện không Online, chọn người khác đi ba.", 3000);
             dialog.show();

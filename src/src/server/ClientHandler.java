@@ -20,6 +20,7 @@ import src.RequestWrapper;
 import src.ResponseWrapper;
 import src.client.data.ClientConnection;
 import src.client.data.dto.User;
+import src.model.Answer;
 import src.server.usecase.GamePlayHandler;
 import src.server.usecase.onActionServer;
 
@@ -34,6 +35,7 @@ public class ClientHandler extends Throwable implements Runnable {
     public final PrintWriter out;
     public Socket clientSocketXXX;
     public Gson gson = new Gson();
+    public User user = null;
     public GamePlayHandler gameController;
 
     public ClientHandler(Socket clientSocket, onActionServer svUC) throws IOException {
@@ -81,6 +83,7 @@ public class ClientHandler extends Throwable implements Runnable {
                         if (!Server.listClientConnection.containsKey(user.getUsername())) {
                             User returnUser = svUC.onLogin(user.getUsername(), user.getPassword());
                             Server.listClientConnection.put(returnUser.getUsername(), this);
+                            this.user = returnUser;
                             responseReturn = gson.toJson(returnUser);
                         }
                         else{
@@ -112,7 +115,14 @@ public class ClientHandler extends Throwable implements Runnable {
                     } catch (Exception e) {
                         System.out.println(e);
                     }
+                } else if(a.equals("/postAnswer")){
+                    Map<String, String> data = (Map<String, String>) request.getData();
+                    String idQuestion = data.get("id");
+                    String userAns = data.get("answer");
+                    Long timeStamp = Long.parseLong(data.get("timeStamp"));
+                    gameController.receiveAnswer(this, new Answer(idQuestion,userAns,timeStamp));
                 }
+                if(responseReturn.isEmpty()) continue;
                 ResponseWrapper response = new ResponseWrapper("", responseReturn, a);
                 System.out.println(clientSocketXXX.isConnected()+"" + clientSocketXXX.getRemoteSocketAddress() + "<-- 200: OK : Send Message {" + responseReturn + "} from " + Thread.currentThread().getName());
                 out.println(gson.toJson(response));

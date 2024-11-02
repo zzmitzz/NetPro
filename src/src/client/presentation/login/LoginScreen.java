@@ -190,7 +190,6 @@ public class LoginScreen implements LoginScreenController.onActionResponse{
     public void loginCallback(User user) {
         frame.dispose();
         try {
-
             new HomeScreen(user);
             getController().onCloseLiveUpdate(getController().getClass().getName());
             getController().callbackAction = null;

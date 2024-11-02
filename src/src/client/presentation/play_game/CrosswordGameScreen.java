@@ -1,20 +1,36 @@
 package src.client.presentation.play_game;
 
+import com.google.gson.JsonObject;
+import src.client.data.dto.User;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
-public class CrosswordGameScreen extends JFrame {
+public class CrosswordGameScreen extends JFrame implements CrosswordGameScreenController.onActionResponse {
 
-    public CrosswordGameScreen() {
+    private CrosswordGameScreenController controller;
+    private User user;
+    private double points = 0.0;
+    private int currLevel = 1;
+    private int currQuestionID;
+    JTextField usernameField;
+    JLabel pointsValueLabel;
+    JLabel roundValueLabel;
+    JTextField wordInputField;
+    JTextField questionField;
+    JComboBox<String> directionDropdown;
+    public CrosswordGameScreen(User user) throws IOException {
+        this.user = user;
+
         // Set up the frame properties
         setTitle("Trò chơi đoán ô chữ");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(600, 500);
+        setSize(800, 600);
         setLocationRelativeTo(null); // Center the frame on the screen
         setResizable(false);
-
         // Create a main panel with a background color
         JPanel mainPanel = new JPanel() {
             @Override
@@ -61,8 +77,9 @@ public class CrosswordGameScreen extends JFrame {
         usernameLabel.setFont(new Font("Arial", Font.BOLD, 14));
         controlPanel.add(usernameLabel);
 
-        JTextField usernameField = new JTextField(20);
+        usernameField = new JTextField(20);
         usernameField.setEditable(false);  // Non-editable field
+        usernameField.setText(user.getUsername());
         controlPanel.add(usernameField);
 
         // Points label
@@ -70,8 +87,9 @@ public class CrosswordGameScreen extends JFrame {
         pointsLabel.setFont(new Font("Arial", Font.BOLD, 14));
         controlPanel.add(pointsLabel);
 
-        JLabel pointsValueLabel = new JLabel("0");  // Starting points
+        pointsValueLabel= new JLabel("0");  // Starting points
         pointsValueLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        pointsValueLabel.setText(points+"");
         controlPanel.add(pointsValueLabel);
 
         // Round label
@@ -79,8 +97,9 @@ public class CrosswordGameScreen extends JFrame {
         roundLabel.setFont(new Font("Arial", Font.BOLD, 14));
         controlPanel.add(roundLabel);
 
-        JLabel roundValueLabel = new JLabel("1");  // Starting round
+        roundValueLabel= new JLabel("1");  // Starting round
         roundValueLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        roundValueLabel.setText(currLevel+"");
         controlPanel.add(roundValueLabel);
 
         // Question label
@@ -88,7 +107,7 @@ public class CrosswordGameScreen extends JFrame {
         questionLabel.setFont(new Font("Arial", Font.BOLD, 14));
         controlPanel.add(questionLabel);
 
-        JTextField questionField = new JTextField(20);
+        questionField = new JTextField(50);
         questionField.setEditable(false);  // Non-editable field
         controlPanel.add(questionField);
 
@@ -98,7 +117,7 @@ public class CrosswordGameScreen extends JFrame {
         controlPanel.add(wordInputLabel);
 
         // Word input text field
-        JTextField wordInputField = new JTextField(20);
+        wordInputField = new JTextField(20);
         controlPanel.add(wordInputField);
 
         // Confirm button
@@ -112,27 +131,50 @@ public class CrosswordGameScreen extends JFrame {
         confirmButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Handle confirm button click
-                // You can add your confirmation logic here
-                JOptionPane.showMessageDialog(CrosswordGameScreen.this, "Xác nhận thành công!");
+                String answer = wordInputField.getText();
+                String questionType = (String) directionDropdown.getSelectedItem();
+                if(answer.isEmpty()){
+                    JOptionPane.showMessageDialog(CrosswordGameScreen.this, "Bạn chưa điền câu trả lời");
+                }
+                else{
+                    controller.postAnswer(currQuestionID, answer, questionType);
+                }
             }
         });
         controlPanel.add(confirmButton);
 
         // Dropdown for row/column selection
         String[] directions = { "Cột ngang", "Cột dọc" };
-        JComboBox<String> directionDropdown = new JComboBox<>(directions);
+        directionDropdown = new JComboBox<>(directions);
         controlPanel.add(directionDropdown);
 
+        controller = new CrosswordGameScreenController(this);
         // Set frame visibility
         setVisible(true);
     }
 
-    public static void main(String[] args) {
-        // Create an instance of the CrosswordGameScreen to display it
-        SwingUtilities.invokeLater(() -> {
-            CrosswordGameScreen gameScreen = new CrosswordGameScreen();
-            gameScreen.setVisible(true);
-        });
+    @Override
+    public void onStartGame() {
+
+    }
+
+    @Override
+    public void onReceiveQuestion(int id, String question) {
+        currQuestionID = id;
+        questionField.setText(question);
+        roundValueLabel.setText(currLevel+"");
+        currLevel++;
+        roundValueLabel.repaint();
+        questionField.repaint();
+    }
+
+    @Override
+    public void onAnswerResult(double point, boolean status) {
+
+    }
+
+    @Override
+    public void onEndGame(boolean stateResult) {
+
     }
 }
