@@ -7,14 +7,10 @@ package src.client;
 import src.client.data.ClientConnection;
 import src.client.presentation.login.LoginScreen;
 
-/**
- *
- * @author 1
- */
+
 public class ClientApplication {
     public static void main(String[] args) {
-        ClientConnection clientConnection = ServiceLocator.initAPI();
-        System.out.println(clientConnection.hashCode());
+        ServiceLocator.initAPI();
         new LoginScreen();
     }
 }

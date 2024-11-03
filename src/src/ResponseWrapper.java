@@ -1,6 +1,6 @@
 package src;
 
-public class ResponseWrapper {
+public class  ResponseWrapper {
 
     public String type;
     public String data;

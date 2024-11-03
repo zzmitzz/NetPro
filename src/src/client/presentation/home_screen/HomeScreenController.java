@@ -76,7 +76,4 @@ public class HomeScreenController extends BaseClientController{
         body.addProperty("currUser", currUser);
         doJsonRequest(body, "/playGameUser");
     }
-
-
-
 }

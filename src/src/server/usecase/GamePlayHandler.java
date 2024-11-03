@@ -4,8 +4,11 @@
  */
 package src.server.usecase;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,10 +18,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import src.model.Answer;
 import src.model.Question;
 import src.server.ClientHandler;
+
+import javax.swing.*;
 
 /**
  * @author 1
@@ -26,11 +32,13 @@ import src.server.ClientHandler;
 public class GamePlayHandler<T> implements Runnable {
     private final ClientHandler player1;
     private final ClientHandler player2;
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    //    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private final BlockingQueue<Answer> responseQueue = new LinkedBlockingQueue<>();
-    private int questionNumber = 1;
+    private AtomicInteger questionNumber = new AtomicInteger(0);
     private final int totalQuestions = 10;
-
+    private Timer timer;
+    private double score1 = -1;
+    private double score2 = -1;
 
     private Map<String, List<Question>> questions = new HashMap<>();
 
@@ -44,15 +52,15 @@ public class GamePlayHandler<T> implements Runnable {
 
     private void initQuestion() {
         Question q1 = new Question(
-                "Hai số đối nhau có giá trị tuyệt đối … bằng nhau",
-                "bằng nhau",
-                6 - "bằng nhau".indexOf("h")
+                "Hai số đối nhau có giá trị tuyệt đối … ",
+                "Bangnhau",
+                6 - "Bangnhau".indexOf("h")
         );
 
         Question q2 = new Question(
                 "Ở Hà Nội, phố nào nối phố Đồng Xuân và phố Hàng Ngang, nổi tiếng với ô mai?",
-                "Hàng Lược",
-                6 - "Hàng Lược".indexOf("o")
+                "Hangluoc",
+                6 - "Hangluoc".indexOf("o")
         );
 
         Question q3 = new Question(
@@ -74,7 +82,7 @@ public class GamePlayHandler<T> implements Runnable {
         );
 
         Question q6 = new Question(
-                "Loài nào sau đây sống ở môi trường rừng ngập mặn: sú, vẹt, đước, bần?",
+                "Loài nào sau đây sống ở môi trường rừng ngập mặn: sú, vẹt, đước, bần, tất cả?",
                 "Tatca",
                 6 - "Tatca".indexOf("a")
         );
@@ -127,13 +135,35 @@ public class GamePlayHandler<T> implements Runnable {
     }
 
     private void sendNextQuestion() {
-        if (questionNumber >= totalQuestions) {
-            endGame();
+        if (questionNumber.get() >= totalQuestions) {
+            preEndGame();
+            timer.stop();
+            timer = null;
             return;
         }
-        Question question = questions.get("honghainhi").get(questionNumber);
+        Question question = questions.get("honghainhi").get(questionNumber.get());
+        if (timer != null) {
+            timer.stop();
+            timer = null;
+        }
+        timer = new Timer(1000, new ActionListener() {
+            int timeLeft = 30; // Starting time
 
-
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (timeLeft > 0) {
+                    JsonObject returnJson = new JsonObject();
+                    returnJson.addProperty("timeLeft", timeLeft);
+                    timeLeft--;
+                    player1.sendMessage(returnJson.toString(), "/onCountdown");
+                    player2.sendMessage(returnJson.toString(), "/onCountdown");
+                }
+                if (timeLeft == 0) {
+                    GamePlayHandler.this.sendNextQuestion();
+                }
+            }
+        });
+        timer.start();
         JsonObject returnJson = new JsonObject();
         returnJson.addProperty("question", question.ques);
         returnJson.addProperty("id", questionNumber);
@@ -143,36 +173,69 @@ public class GamePlayHandler<T> implements Runnable {
         player2.sendMessage(returnJson.toString(), "/postQuestion");
 
         // Schedule next question in 10 seconds, if there are more questions
-        scheduler.schedule(this::sendNextQuestion, 30, TimeUnit.SECONDS);
-        questionNumber++;
+        questionNumber.set(questionNumber.get() + 1);
     }
-
-    public void receiveAnswer(ClientHandler a, Answer response){
-        responseQueue.offer(response);
-        try{
-            if(!responseQueue.isEmpty()){
-                Answer ans = responseQueue.take();
-                if(a.equals(player1)){
-
+    public void receiveScore(ClientHandler a, double score){
+        System.out.println(score);
+        if(a.equals(player1)){
+            score1 = score;
+        }
+        if(a.equals(player2)){
+            score2 = score;
+        }
+        if(score1 != -1 && score2 != -1){
+            onGameFinish();
+        }
+    }
+    public void receiveAnswer(ClientHandler a, Answer response) {
+        if (response.id.equals((questionNumber.get() - 1) + "")) {
+            if(response.type.equalsIgnoreCase("Cột ngang")){
+                if (response.answer.equalsIgnoreCase(questions.get("honghainhi").get((questionNumber.get() - 1)).answer)) {
+                    JsonObject player1Result = new JsonObject();
+                    player1Result.addProperty("status", true);
+                    player1Result.addProperty("point", 100);
+                    a.sendMessage(player1Result.toString(), "/onAnswerReceive");
+                    sendNextQuestion();
+                }else{
+                    JsonObject player1Result = new JsonObject();
+                    player1Result.addProperty("status", false);
+                    player1Result.addProperty("point", -40);
+                    a.sendMessage(player1Result.toString(), "/onAnswerReceive");
                 }
-                if(a.equals(player2)){
-
+            }else{
+                if(questions.containsKey(response.answer.toLowerCase().trim())){
+                    JsonObject player1Result = new JsonObject();
+                    player1Result.addProperty("status", true);
+                    player1Result.addProperty("point", 500);
+                    a.sendMessage(player1Result.toString(), "/onAnswerReceive");
+                    questionNumber.set(11);
+                    sendNextQuestion();
                 }
             }
-        }catch (Exception e){
-
         }
-
     }
 
-    private void endGame() {
+    private void preEndGame() {
         JsonObject player1Result = new JsonObject();
-        player1Result.addProperty("status", true);
+        player1Result.addProperty("ending", true);
         JsonObject player2Result = new JsonObject();
-        player2Result.addProperty("status", true);
+        player2Result.addProperty("ending", true);
         player1.sendMessage(player1Result.toString(), "/endGame");
         player2.sendMessage(player2Result.toString(), "/endGame");
-        scheduler.shutdown();
+    }
+
+    private void onGameFinish(){
+        JsonObject player1Result = new JsonObject();
+        JsonObject player2Result = new JsonObject();
+        if(score1 == score2){
+            player1Result.addProperty("status", 0);
+            player2Result.addProperty("status", 0);
+        }else{
+            player1Result.addProperty("status", score1-score2);
+            player2Result.addProperty("status", score2-score1);
+        }
+        player1.sendMessage(player1Result.toString(), "/onGameFinish");
+        player2.sendMessage(player2Result.toString(), "/onGameFinish");
     }
 
     @Override

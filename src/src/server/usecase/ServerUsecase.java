@@ -25,5 +25,7 @@ public class ServerUsecase implements onActionServer{
     public List<User> getListUser() {
         return serverDBConnection.getAllUser();
     }
-    
+
+
+
 }

@@ -4,12 +4,14 @@
  */
 package src.client.common;
 
+import java.io.IOException;
+
 /**
  *
  * @author 1
  */
 public interface onAction {
-    void onSuccess(String data);
+    void onSuccess(String data) throws IOException;
     void onFail();
     void onError(String error);
 }

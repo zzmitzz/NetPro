@@ -12,6 +12,7 @@ import src.client.presentation.login.LoginScreenController.onActionResponse;
 
 public class LoginScreenController extends BaseClientController{
     private final onActionResponse listener;
+
     public interface onActionResponse {
 
         void loginCallback(User user);
@@ -65,4 +66,5 @@ public class LoginScreenController extends BaseClientController{
                 ),
                 "/doLogin");
     }
+
 }

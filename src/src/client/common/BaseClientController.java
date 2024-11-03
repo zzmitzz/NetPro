@@ -15,6 +15,7 @@ public abstract class BaseClientController {
     public onAction callbackAction = null;
     public <T> void doJsonRequest(T object, String route) {
         try {
+            System.out.println("--> Send request: " + route);
             clientConnection.doJsonRequest(object, route);
         } catch (IOException ex) {
             Logger.getLogger(BaseClientController.class.getName()).log(Level.SEVERE, null, ex);
@@ -34,6 +35,7 @@ public abstract class BaseClientController {
                 if (callbackAction != null) {
                     try {
                         System.out.println("DEBUG" + callbackAction.hashCode());
+
                         callbackAction.onSuccess(data);
                     } catch (Exception e) {
                         e.printStackTrace();

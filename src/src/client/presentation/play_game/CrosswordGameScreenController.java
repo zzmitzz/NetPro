@@ -14,37 +14,54 @@ public class CrosswordGameScreenController extends BaseClientController {
     
     private final onActionResponse listener;
     public interface onActionResponse {
+        void onCountDownTime(int remainTime);
         void onStartGame();
         void onReceiveQuestion(int id, String question);
         void onAnswerResult(double point, boolean status);
-        void onEndGame(boolean stateResult);
+        void onEndGame(double stateResult) throws IOException;
+        void onGameEnd();
     }
 
     public void postAnswer(int idQuestion, String answerInput, String questionType){
         JsonObject body = new JsonObject();
-        body.addProperty("id", idQuestion );
+        body.addProperty("id", idQuestion+"" );
         body.addProperty("answer", answerInput);
         body.addProperty("timeStamp","" + System.currentTimeMillis());
         body.addProperty("type", questionType);
-        doJsonRequest(body.toString(), "/postAnswer");
+        doJsonRequest(body, "/postAnswer");
     }
-
+    public void postScore(double score){
+        JsonObject body = new JsonObject();
+        body.addProperty("score",score);
+        doJsonRequest(body, "/postScore");
+    }
     public CrosswordGameScreenController(onActionResponse action) throws IOException{
         this.listener = action;
         callbackAction = new onAction(){
             @Override
-            public void onSuccess(String data) {
+            public void onSuccess(String data) throws IOException {
+
                 ResponseWrapper rp = gson.fromJson(JsonParser.parseString(data), ResponseWrapper.class);
                 String route = rp.route;
                 if(route.equals("/postQuestion")){
                     JsonObject parseData = gson.fromJson(rp.data, JsonObject.class);
                     listener.onReceiveQuestion(parseData.get("id").getAsInt(), parseData.get("question").getAsString());
                 }
-                if(route.equals("/endGame")){
-                    listener.onEndGame(gson.fromJson(rp.data, JsonObject.class).get("status").getAsBoolean());
+                if(route.equals("/onGameFinish")){
+                    listener.onEndGame(gson.fromJson(rp.data, JsonObject.class).get("status").getAsDouble());
                 }
-                if(route.equals("/sendQuestion")){
-
+                if(route.equals("/onAnswerReceive")){
+                    JsonObject jsonObject = JsonParser.parseString(rp.data).getAsJsonObject();
+                    boolean status = jsonObject.get("status").getAsBoolean();
+                    double point  = jsonObject.get("point").getAsDouble();
+                    listener.onAnswerResult(point, status);
+                }
+                if(route.equals("/onCountdown")){
+                    JsonObject parseData = gson.fromJson(rp.data, JsonObject.class);
+                    listener.onCountDownTime(parseData.get("timeLeft").getAsInt());
+                }
+                if(route.equals("/endGame")){
+                    listener.onGameEnd();
                 }
             }
             @Override

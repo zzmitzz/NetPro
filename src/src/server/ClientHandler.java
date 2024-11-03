@@ -119,9 +119,15 @@ public class ClientHandler extends Throwable implements Runnable {
                     Map<String, String> data = (Map<String, String>) request.getData();
                     String idQuestion = data.get("id");
                     String userAns = data.get("answer");
-                    Long timeStamp = Long.parseLong(data.get("timeStamp"));
-                    gameController.receiveAnswer(this, new Answer(idQuestion,userAns,timeStamp));
+                    long timeStamp = Long.parseLong(data.get("timeStamp"));
+                    String type = data.get("type");
+                    gameController.receiveAnswer(this, new Answer(idQuestion,userAns,timeStamp,type));
+                } else if(a.equals("/postScore")){
+                    Map<String, Double> data = (Map<String, Double>) request.getData();
+                    double point = data.get("score");
+                    gameController.receiveScore(this,point);
                 }
+
                 if(responseReturn.isEmpty()) continue;
                 ResponseWrapper response = new ResponseWrapper("", responseReturn, a);
                 System.out.println(clientSocketXXX.isConnected()+"" + clientSocketXXX.getRemoteSocketAddress() + "<-- 200: OK : Send Message {" + responseReturn + "} from " + Thread.currentThread().getName());
