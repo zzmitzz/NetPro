@@ -13,6 +13,6 @@ import src.client.data.dto.User;
  */
 public interface onActionServer {
     public User onLogin(String username, String password) ;
-    public User onSigningUp(String fullname, String username, String password);
+    public boolean onSigningUp(String fullname, String username, String password);
     public List<User> getListUser();
 }

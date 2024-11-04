@@ -16,15 +16,14 @@ import javax.swing.text.Document;
 import src.client.common.LoadingDialog;
 import src.client.data.dto.User;
 import src.client.presentation.home_screen.HomeScreen;
+import src.client.presentation.signup.RegisterScreen;
 
-public class LoginScreen implements LoginScreenController.onActionResponse{
+public class LoginScreen implements LoginScreenController.onActionResponse {
     private String username = "";
     private String password = "";
-    private LoginScreenController controller ;
+    private LoginScreenController controller;
     private JFrame frame;
-    LoadingDialog loadingDialog ;
-    
-    
+    LoadingDialog loadingDialog;
     
     private LoginScreenController getController() throws IOException{
         if(controller == null){
@@ -46,7 +45,8 @@ public class LoginScreen implements LoginScreenController.onActionResponse{
             return ""; // Return empty string if something goes wrong
         }
     }
-    public LoginScreen(){
+
+    public LoginScreen() {
         // Create the frame
         frame = new JFrame("Trò chơi đoán ô chữ");
         frame.addWindowListener(new WindowListener() {
@@ -69,9 +69,7 @@ public class LoginScreen implements LoginScreenController.onActionResponse{
             }
 
             @Override
-            public void windowClosed(WindowEvent e) {
-
-            }
+            public void windowClosed(WindowEvent e) {}
             @Override
             public void windowIconified(WindowEvent e) {}
             @Override
@@ -81,6 +79,7 @@ public class LoginScreen implements LoginScreenController.onActionResponse{
             @Override
             public void windowDeactivated(WindowEvent e) {}
         });
+
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 300);
         loadingDialog = new LoadingDialog(frame);
@@ -113,17 +112,17 @@ public class LoginScreen implements LoginScreenController.onActionResponse{
         usernameText.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-               username = getTextFromDocumentEvent(e);
+                username = usernameText.getText();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                username = getTextFromDocumentEvent(e);
+                username = usernameText.getText();
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                username = getTextFromDocumentEvent(e);
+                username = usernameText.getText();
             }
         });
 
@@ -140,17 +139,17 @@ public class LoginScreen implements LoginScreenController.onActionResponse{
         passwordText.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                password = getTextFromDocumentEvent(e);
+                password = new String(passwordText.getPassword());
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                password = getTextFromDocumentEvent(e);
+                password = new String(passwordText.getPassword());
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                password = getTextFromDocumentEvent(e);
+                password = new String(passwordText.getPassword());
             }
         });
         
@@ -167,7 +166,16 @@ public class LoginScreen implements LoginScreenController.onActionResponse{
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                        
+                frame.dispose();
+                try {
+                    new RegisterScreen();
+                    getController().onCloseLiveUpdate(getController().getClass().getName());
+                    getController().callbackAction = null;
+                    controller = null;
+                } catch (IOException ex) {
+                    Logger.getLogger(LoginScreen.class.getName()).log(Level.SEVERE, null, ex);
+                    System.out.println(ex);
+                }
             }
         });
         
@@ -198,7 +206,6 @@ public class LoginScreen implements LoginScreenController.onActionResponse{
             Logger.getLogger(LoginScreen.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println(ex);
         }
-
     }
     
     @Override

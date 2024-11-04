@@ -70,15 +70,17 @@ public class ClientConnection {
         Runnable listeningTask = () -> {
             while (isListening && !Thread.currentThread().isInterrupted() ) {
                 String dataRes = null;
-                System.out.println(Thread.currentThread().getName() + "listening");
+                System.out.println(Thread.currentThread().getName() + " listening");
+
                 try {
                     dataRes = in.readLine();
-                    System.out.println("Data read on :" + Thread.currentThread().getName());
+                    System.out.println("Data read on: " + Thread.currentThread().getName());
                     if (dataRes == null) continue;
-                    System.out.println("<-- 200 OK: Receive" + dataRes);
+                    System.out.println("<-- 200 OK: Receive " + dataRes);
                 } catch (IOException ex) {
                     Logger.getLogger(ClientConnection.class.getName()).log(Level.SEVERE, null, ex);
                 }
+
                 System.out.println(System.currentTimeMillis());
                 if (dataRes != null && !dataRes.isEmpty()) {
                     callback.onSuccess(dataRes);
@@ -98,10 +100,10 @@ public class ClientConnection {
             if (task != null) {
 //                isListening = false;
                 task.cancel(true);
-                System.out.println(controllerName + "canceled");
+                System.out.println(controllerName + " canceled");
                 taskMap.remove(controllerName); // Remove from map
             }
-            System.out.println(Thread.currentThread().getName() + "Current listening has been stopped.");
+            System.out.println(Thread.currentThread().getName() + ". Current listening has been stopped.");
         } catch (Exception e) {
         }
     }

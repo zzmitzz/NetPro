@@ -8,7 +8,7 @@ import java.util.List;
 import src.client.data.dto.User;
 import src.server.database_connection.ServerDBConnection;
 
-public class ServerUsecase implements onActionServer{
+public class ServerUsecase implements onActionServer {
     ServerDBConnection serverDBConnection = new ServerDBConnection();
     
     @Override
@@ -17,15 +17,12 @@ public class ServerUsecase implements onActionServer{
     }
 
     @Override
-    public User onSigningUp(String fullname, String username, String password ) {
-        return null;
+    public boolean onSigningUp(String fullname, String username, String password) {
+        return serverDBConnection.doRegisterRequest(fullname, username, password);
     }
 
     @Override
     public List<User> getListUser() {
         return serverDBConnection.getAllUser();
     }
-
-
-
 }

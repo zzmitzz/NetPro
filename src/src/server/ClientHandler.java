@@ -44,15 +44,18 @@ public class ClientHandler extends Throwable implements Runnable {
         out = new PrintWriter(clientSocket.getOutputStream(), true);
         this.clientSocketXXX = clientSocket;
     }
+
     public void setGameController(GamePlayHandler gameCtr){
         gameController = gameCtr;
     }
+
     public void sendMessage(String responseReturn, String route){
         ResponseWrapper response = new ResponseWrapper("", responseReturn, route);
         System.out.println(clientSocketXXX.isConnected()+"" + clientSocketXXX.getRemoteSocketAddress() + "<-- 200: OK : Send Message {" + responseReturn + "} from " + Thread.currentThread().getName());
         out.println(gson.toJson(response));
         out.flush();
     }
+
     @Override
     public void run() {
         String json;
@@ -71,6 +74,7 @@ public class ClientHandler extends Throwable implements Runnable {
                 }
                 String responseReturn = "";
                 String a = request.getRoute();
+
                 if (a.equals("/doLogin")) {
                     try {
                         Map<String, Object> data = (Map<String, Object>) request.getData();
@@ -93,6 +97,39 @@ public class ClientHandler extends Throwable implements Runnable {
                     } catch (NumberFormatException e) {
                         System.out.println("Exception caused" + e.toString());
                     }
+                } else if (a.equals("/doRegister")) {
+                    try {
+                        Map<String, Object> data = (Map<String, Object>) request.getData();
+                        User user = new User(
+                                data.get("fullName").toString(),
+                                data.get("username").toString(),
+                                data.get("password").toString(),
+                                0.0
+                        );
+                        
+                        boolean isUserExist = false;
+                        List<User> listUser = svUC.getListUser();
+                        for (User eachUser : listUser) {
+                            if (eachUser.getUsername().equals(user.getUsername())) {
+                                isUserExist = true;
+                                break;
+                            }
+                        }
+
+                        if (!isUserExist) {
+                            boolean isSuccessCreateAccount = svUC.onSigningUp(user.getFullName(), user.getUsername(), user.getPassword());
+                            if (isSuccessCreateAccount) {
+                                responseReturn = "successfully create account";
+                            } else {
+                                responseReturn = "null";
+                            }
+                        } else {
+                            responseReturn  = "username already exist";
+                        }
+                    }  catch (NumberFormatException e) {
+                        System.out.println("Exception caused" + e.toString());
+                    }
+
                 } else if (a.equals("/getListUser")) {
                     try {
                         List<User> listUser = svUC.getListUser();
@@ -130,7 +167,7 @@ public class ClientHandler extends Throwable implements Runnable {
 
                 if(responseReturn.isEmpty()) continue;
                 ResponseWrapper response = new ResponseWrapper("", responseReturn, a);
-                System.out.println(clientSocketXXX.isConnected()+"" + clientSocketXXX.getRemoteSocketAddress() + "<-- 200: OK : Send Message {" + responseReturn + "} from " + Thread.currentThread().getName());
+                System.out.println(clientSocketXXX.isConnected() + "" + clientSocketXXX.getRemoteSocketAddress() + " <-- 200: OK | Send Message: {" + responseReturn + "} from " + Thread.currentThread().getName());
                 out.println(gson.toJson(response));
                 out.flush();
             } catch (JsonSyntaxException e) {

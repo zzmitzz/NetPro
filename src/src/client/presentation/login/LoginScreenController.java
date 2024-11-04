@@ -10,16 +10,15 @@ import src.client.common.onAction;
 import src.client.data.dto.User;
 import src.client.presentation.login.LoginScreenController.onActionResponse;
 
-public class LoginScreenController extends BaseClientController{
+public class LoginScreenController extends BaseClientController {
     private final onActionResponse listener;
 
     public interface onActionResponse {
-
         void loginCallback(User user);
-
         void registerCallback();
     }
-    public LoginScreenController(onActionResponse action) throws IOException{
+
+    public LoginScreenController(onActionResponse action) throws IOException {
         this.listener = action;
         callbackAction = new onAction() {
             @Override
@@ -34,24 +33,20 @@ public class LoginScreenController extends BaseClientController{
                             jsonObject.get("password").getAsString(),
                             jsonObject.get("score").getAsDouble()
                     ));
-                }
-                else if(route.equals("/test")){
+                } else if (route.equals("/test")) {
                     System.out.println(data);
                 }
+
                 if(route.equals("/doRegistery")){
                     // Todo
                 }
             }
 
             @Override
-            public void onFail() {
-
-            }
+            public void onFail() {}
 
             @Override
-            public void onError(String e) {
-
-            }
+            public void onError(String e) {}
         };
         onStartLiveUpdate(this.getClass().getName());
     }

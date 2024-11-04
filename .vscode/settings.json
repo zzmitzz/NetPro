@@ -1,0 +1,9 @@
+{
+    "java.project.referencedLibraries": [
+        "c:\\Users\\datqm\\NetPro\\gson-2.11.0.jar",
+        "c:\\Users\\datqm\\NetPro\\mysql-connector-j-9.0.0.jar"
+    ],
+    "java.project.sourcePaths": [
+        "src"
+    ]
+}

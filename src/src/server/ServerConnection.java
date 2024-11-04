@@ -1,6 +1,7 @@
 package src.server;
 
 import java.io.IOException;
+import java.net.BindException;
 import java.net.ServerSocket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,6 +25,8 @@ public class ServerConnection {
         try {
             myServer = new ServerSocket(portNumber);
             System.out.println("Server: Server opened, waiting for connection  .... ");
+        } catch (BindException e) {
+            System.out.println("Port " + portNumber + " is already in use. Please choose another port.");
         } catch (IOException e) {
             System.out.println(e + getClass().toString());
         }

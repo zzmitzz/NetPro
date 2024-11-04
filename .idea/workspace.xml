@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="6baf8661-b4b7-4b52-9a4d-d0d851a05a8d" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/build/classes/src/Application$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/Application.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/RequestWrapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/ResponseWrapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/WelcomeScreen$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/WelcomeScreen$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/WelcomeScreen$ScreenCallBack.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/WelcomeScreen.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/client/common/BaseClientController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/client/common/Response.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/client/data/ClientConnection.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/client/data/ClientListenerHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/client/data/dto/User.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/home_screen/HomeScreen$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/home_screen/HomeScreen$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/home_screen/HomeScreen$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/home_screen/HomeScreen.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/home_screen/HomeScreenController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/login/LoginScreen$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/login/LoginScreen$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/login/LoginScreen$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/login/LoginScreen$4.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/login/LoginScreen.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/login/LoginScreenController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/play_game/CrosswordGameScreen$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/play_game/CrosswordGameScreen$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/play_game/CrosswordGameScreen.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/play_game/CrosswordGameScreenController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/signup/RegisterScreen$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/signup/RegisterScreen$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/signup/RegisterScreen$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/signup/RegisterScreen.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/signup/RegisterScreenController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/helper/ObjectUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/server/ClientHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/server/Constant.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/server/Server.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/server/ServerConnection.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/server/database_connection/DBAction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/server/database_connection/ServerDBConnection.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/server/usecase/ServerUsecase.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/src/server/usecase/onActionServer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nbproject/build-impl.xml" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/build-impl.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nbproject/genfiles.properties" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/genfiles.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nbproject/private/private.properties" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/private/private.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nbproject/private/private.xml" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/private/private.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nbproject/project.properties" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/project.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nbproject/project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/project.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/src/client/presentation/login/LoginScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/client/presentation/login/LoginScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/src/client/presentation/login/LoginScreenController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/client/presentation/login/LoginScreenController.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 7
+}]]></component>
+  <component name="ProjectId" id="2oKcsbRcSzlMvfrJqyqpJfAdTQ2" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Application.Application.executor": "Run",
+    "Application.RegisterScreen.executor": "Debug",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/datqm/Downloads/gson-2.11.0.jar",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="RegisterScreen" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="src.client.presentation.signup.RegisterScreen" />
+      <module name="NetPro" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="src.client.presentation.signup.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.RegisterScreen" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6baf8661-b4b7-4b52-9a4d-d0d851a05a8d" name="Changes" comment="" />
+      <created>1730621919812</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1730621919812</updated>
+    </task>
+    <servers />
+  </component>
+</project>

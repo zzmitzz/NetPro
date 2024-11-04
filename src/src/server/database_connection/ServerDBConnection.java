@@ -6,6 +6,7 @@ import java.net.ServerSocket;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import src.client.data.dto.User;
@@ -17,7 +18,6 @@ public class ServerDBConnection implements DBAction{
 
     public ServerDBConnection() {
         getDBConnection(Constant.dbName, Constant.userDBName, Constant.passDBName);
-
     }
 
     private void getDBConnection(String dbName, String username, String password) {
@@ -31,8 +31,6 @@ public class ServerDBConnection implements DBAction{
             e.printStackTrace();
         }
     }
-    
-    
     
     @Override
     public ArrayList<User> getAllUser() {
@@ -80,19 +78,24 @@ public class ServerDBConnection implements DBAction{
     }
 
     @Override
-    public boolean doRegisterRequest(String username, String password) {
-        String query = "INSERT INTO user (username,password) VALUES (?,?) ";
-        try(PreparedStatement stmt = con.prepareStatement(query)) {
-            stmt.setString(1,username);
-            stmt.setString(2, password);
-            ResultSet rs = stmt.executeQuery();
-            // Execute the update
-            int rowsInserted = stmt.executeUpdate();
-            return rowsInserted > 0;
-        } catch (Exception e) {
-        }
+    public boolean doRegisterRequest(String fullname, String username, String password) {
+        String sql = "INSERT INTO user (fullname, username, password, score) VALUES (?, ?, ?, ?)";
+
+        try (PreparedStatement preparedStatement = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setString(1, fullname);
+            preparedStatement.setString(2, username);
+            preparedStatement.setString(3, password);
+            preparedStatement.setDouble(4, 0.0);
+
+            int affectedRows = preparedStatement.executeUpdate();
+
+            if (affectedRows > 0) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } 
+
         return false;  
     }
-    
-    
 }

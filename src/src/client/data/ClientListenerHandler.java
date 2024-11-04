@@ -9,13 +9,8 @@ package src.client.data;
  * @author 1
  */
 public class ClientListenerHandler implements Runnable{
+    public ClientListenerHandler(){}
     
-    public ClientListenerHandler(){
-        
-    }
     @Override
-    public void run() {
-        
-    }
-    
+    public void run() {}
 }

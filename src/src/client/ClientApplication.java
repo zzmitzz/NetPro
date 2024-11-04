@@ -6,7 +6,7 @@ package src.client;
 
 import src.client.data.ClientConnection;
 import src.client.presentation.login.LoginScreen;
-
+import src.client.presentation.signup.RegisterScreen;
 
 public class ClientApplication {
     public static void main(String[] args) {

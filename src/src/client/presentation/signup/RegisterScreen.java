@@ -1,108 +1,203 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package src.client.presentation.signup;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 
-public class RegisterScreen {
+import src.client.data.dto.User;
+import src.client.presentation.home_screen.HomeScreen;
+import src.client.presentation.login.LoginScreen;
+import src.client.presentation.login.LoginScreenController;
+import src.client.presentation.signup.RegisterScreenController;
+import src.client.common.LoadingDialog;
 
-    public static void main(String[] args) {
+public class RegisterScreen implements RegisterScreenController.onActionResponse {
+    private String fullname = "";
+    private String username = "";
+    private String password = "";
+    private JFrame frame;
+    private RegisterScreenController controller;
+    LoadingDialog loadingDialog;
+
+    private RegisterScreenController getController() throws IOException {
+        if (controller == null) {
+            controller = new RegisterScreenController(this);
+            return controller;
+        }
+        return controller;
+    }
+
+    private String getTextFromDocumentEvent(DocumentEvent e) {
+        Document doc = e.getDocument();
+        int offset = e.getOffset();
+        int length = e.getLength();
+        try {
+            // Get the text from the document at the specified offset and length
+            return doc.getText(offset, length);
+        } catch (BadLocationException ex) {
+            ex.printStackTrace();
+            return ""; // Return empty string if something goes wrong
+        }
+    }
+
+    public RegisterScreen() {
+        
         // Create the frame
-        JFrame frame = new JFrame("Đăng ký");
+        frame = new JFrame("Đăng ký");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 300);
+        loadingDialog = new LoadingDialog(frame);
         
         // Create a panel for the form
-        JPanel panel = new JPanel();
-        panel.setLayout(null);  // Using null layout for manual positioning
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         frame.add(panel);
+        
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         
         // Create and set title label
         JLabel titleLabel = new JLabel("Đăng ký", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        titleLabel.setBounds(50, 20, 300, 30);
-        panel.add(titleLabel);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        panel.add(titleLabel, gbc);
         
         // Instruction label
-        JLabel instructionLabel = new JLabel("Vui lòng nhập tên đăng nhập và mật khẩu:");
-        instructionLabel.setBounds(50, 60, 300, 25);
-        panel.add(instructionLabel);
+        JLabel instructionLabel = new JLabel("Vui lòng nhập tên đầy đủ, tên đăng nhập và mật khẩu:");
+        gbc.gridy = 1;
+        gbc.gridwidth = 2;
+        panel.add(instructionLabel, gbc);
         
+        // Fullname label and text field
+        JLabel fullnameLabel = new JLabel("Tên đầy đủ:");
+        gbc.gridy = 2;
+        gbc.gridwidth = 1;
+        panel.add(fullnameLabel, gbc);
+
+        JTextField fullnameText = new JTextField(20);
+        gbc.gridx = 1;
+        panel.add(fullnameText, gbc);
+
+        // Add listener for fullname text field
+        fullnameText.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                fullname = fullnameText.getText();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                fullname = fullnameText.getText();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                fullname = fullnameText.getText();
+            }
+        });
+
         // Username label and text field
         JLabel usernameLabel = new JLabel("Tên đăng nhập:");
-        usernameLabel.setBounds(50, 100, 100, 25);
-        panel.add(usernameLabel);
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        panel.add(usernameLabel, gbc);
         
         JTextField usernameText = new JTextField(20);
-        usernameText.setBounds(160, 100, 150, 25);
-        panel.add(usernameText);
+        gbc.gridx = 1;
+        panel.add(usernameText, gbc);
         
         // Add listener for username text field
         usernameText.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                // Handle when text is inserted
+            username = usernameText.getText();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                // Handle when text is removed
+            username = usernameText.getText();
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                // Handle when text is changed
+            username = usernameText.getText();
             }
         });
 
         // Password label and text field
         JLabel passwordLabel = new JLabel("Mật khẩu:");
-        passwordLabel.setBounds(50, 140, 100, 25);
-        panel.add(passwordLabel);
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        panel.add(passwordLabel, gbc);
         
         JPasswordField passwordText = new JPasswordField(20);
-        passwordText.setBounds(160, 140, 150, 25);
-        panel.add(passwordText);
+        gbc.gridx = 1;
+        panel.add(passwordText, gbc);
         
         // Add listener for password text field
         passwordText.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                // Handle when password is inserted
+                password = new String(passwordText.getPassword());
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                // Handle when password is removed
+                password = new String(passwordText.getPassword());
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                // Handle when password is changed
+                password = new String(passwordText.getPassword());
             }
         });
         
         // Register button
         JButton registerButton = new JButton("Đăng ký");
-        registerButton.setBounds(150, 200, 100, 25);
-        panel.add(registerButton);
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.gridwidth = 2;
+        panel.add(registerButton, gbc);
         
         // Add listener for Register button
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Handle register button click
+                try {
+                    getController().onRegister(fullname, username, password);
+                } catch (IOException ex) {
+                    Logger.getLogger(RegisterScreen.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         
         // Set the frame visibility
         frame.setVisible(true);
+    }
+
+    @Override
+    public void registerCallback(User user) {
+        frame.dispose();
+        try {
+            new HomeScreen(user);
+            getController().onCloseLiveUpdate(getController().getClass().getName());
+            getController().callbackAction = null;
+            controller = null;
+        } catch (IOException ex) {
+            Logger.getLogger(RegisterScreen.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex);
+        }
     }
 }
