@@ -16,6 +16,9 @@ public class HomeScreenController extends BaseClientController {
     private final onActionResponseHomeScreen listener;
     public interface onActionResponseHomeScreen {
         void onListUserRes(List<User> listUser);
+        void onBeingInvited(String opponentUsername);
+        void onBeingDeclined();
+        void onBeingOffline();
         void onPlayGameState(boolean status);
         void onLogout(String status);
     }
@@ -35,6 +38,11 @@ public class HomeScreenController extends BaseClientController {
                     List<User> list = gson.fromJson(rp.data, new TypeToken<List<User>>(){}.getType());
                     listener.onListUserRes(list);
 
+                } else if (route.equals("/respondToInvitation")) {
+                    JsonObject result = gson.fromJson(rp.data, JsonObject.class);
+                    boolean status = result.get("status").getAsBoolean();
+                    listener.onBeingDeclined();
+
                 } else if (route.equals("/playGameUser")) {
                     try {
                         JsonObject result = gson.fromJson(rp.data, JsonObject.class);
@@ -44,6 +52,16 @@ public class HomeScreenController extends BaseClientController {
                     } catch (Exception e) {
                         System.out.println(e);
                     }
+
+                } else if (route.equals("/invitePlay")) {
+                    JsonObject result = gson.fromJson(rp.data, JsonObject.class);
+                    boolean status = result.get("status").getAsBoolean();
+                    listener.onBeingOffline();
+
+                } else if (route.equals("/beInvited")) {
+                    JsonObject result = gson.fromJson(rp.data, JsonObject.class);
+                    String opponentUsername = result.get("invitedBy").getAsString();
+                    listener.onBeingInvited(opponentUsername);
 
                 } else if (route.equals("/doLogout")) {
                     String status = rp.data;
@@ -75,16 +93,20 @@ public class HomeScreenController extends BaseClientController {
     public void getUserList() {
         doJsonRequest(null, "/getListUser");
     }
-
-    public void getOnlineUserList() {
-        doJsonRequest(null, "/getOnlineUserList");
-    }
     
-    public void invitePlay(String username, String currUser){
+    public void respondToInvitation(boolean status, String oppoUser, String currUser){
+        JsonObject body = new JsonObject();
+        body.addProperty("status", String.valueOf(status));
+        body.addProperty("opponent", oppoUser);
+        body.addProperty("currUser", currUser);
+        doJsonRequest(body, "/respondToInvitation");
+    }
+
+    public void invitePlay(String username, String currUser) {
         JsonObject body = new JsonObject();
         body.addProperty("opponent", username);
         body.addProperty("currUser", currUser);
-        doJsonRequest(body, "/playGameUser");
+        doJsonRequest(body, "/invitePlay");
     }
 
     public void onLogout(User user) {

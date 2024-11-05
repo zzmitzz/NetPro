@@ -7,8 +7,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Vector;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
@@ -31,7 +34,10 @@ public class HomeScreen extends JFrame implements HomeScreenController.onActionR
     private JTable userTable;
     private String selectedUsername;
 
-    private java.util.List<String> listOnlineUser;
+    private List<User> listUser;
+    private boolean isRandom = false;
+
+    private JDialog inviteDialog;
     
     public HomeScreen(User user) throws IOException {
         this.controller = new HomeScreenController(this);
@@ -50,7 +56,6 @@ public class HomeScreen extends JFrame implements HomeScreenController.onActionR
         add(topPanel, BorderLayout.NORTH);
 
         controller.getUserList();
-        controller.getOnlineUserList();
 
         addWindowListener(new WindowListener() {
             @Override
@@ -89,6 +94,7 @@ public class HomeScreen extends JFrame implements HomeScreenController.onActionR
 
         JButton inviteButton = createFancyButton("Gửi lời mời");
         inviteButton.addActionListener((ActionEvent e) -> {
+            isRandom = false;
             if (selectedUsername == null || selectedUsername.isEmpty()) {
                 JOptionPane.showMessageDialog(this,
                     "Vui lòng chọn người chơi trước khi gửi lời mời",
@@ -107,20 +113,14 @@ public class HomeScreen extends JFrame implements HomeScreenController.onActionR
 
         JButton randomButton = createFancyButton("Chơi random");
         randomButton.addActionListener((ActionEvent e) -> {
-            if (selectedUsername == null || selectedUsername.isEmpty()) {
-                JOptionPane.showMessageDialog(this,
-                    "Vui lòng chọn người chơi trước khi gửi lời mời",
-                    "Cảnh báo",
-                    JOptionPane.WARNING_MESSAGE);
-            } else if (selectedUsername.equals(user.getUsername())) {
-                JOptionPane.showMessageDialog(this,
-                    "Không thể gửi lời mời cho chính mình",
-                    "Cảnh báo",
-                    JOptionPane.WARNING_MESSAGE);
-
-            } else {
-                controller.invitePlay(selectedUsername, user.getUsername());
+            isRandom = true;
+            Collections.shuffle(this.listUser);
+            boolean isExistOnlineUser = false;
+            for (User u : listUser) {
+                controller.invitePlay(u.getUsername(), user.getUsername());
             }
+            NotificationDialog dialog = new NotificationDialog("Hiện đang không có người chơi nào online, vui lòng đợi.", 3000);
+            dialog.setVisible(true);
         });
 
         JButton instructionButton = createFancyButton("Hướng dẫn");
@@ -160,7 +160,8 @@ public class HomeScreen extends JFrame implements HomeScreenController.onActionR
     }
 
     @Override
-    public void onListUserRes(java.util.List<User> listUser) {
+    public void onListUserRes(List<User> listUser) {
+        this.listUser = listUser;
         Collections.sort(listUser, new Comparator<User>() {
             @Override
             public int compare(User o1, User o2) {
@@ -209,8 +210,84 @@ public class HomeScreen extends JFrame implements HomeScreenController.onActionR
     }
 
     @Override
+    public void onBeingInvited(String opponentUsername) {
+        inviteDialog = new JDialog(this, "Mời vào trận", true);
+        inviteDialog.setLayout(new BorderLayout(10, 10));
+        inviteDialog.setSize(300, 150);
+        inviteDialog.setLocationRelativeTo(this);
+    
+        // Message panel
+        JPanel messagePanel = new JPanel();
+        JLabel messageLabel = new JLabel("<html>Người chơi " + opponentUsername + " mời bạn vào trận.<br>Chấp nhận lời mời?</html>");
+        messagePanel.add(messageLabel);
+        inviteDialog.add(messagePanel, BorderLayout.CENTER);
+    
+        // Timer label
+        JLabel timerLabel = new JLabel("30");
+        inviteDialog.add(timerLabel, BorderLayout.NORTH);
+    
+        // Buttons panel
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        JButton acceptButton = new JButton("Có");
+        JButton declineButton = new JButton("Không");
+    
+        buttonPanel.add(acceptButton);
+        buttonPanel.add(declineButton);
+        inviteDialog.add(buttonPanel, BorderLayout.SOUTH);
+    
+        // Timer
+        Timer timer = new Timer(1000, new ActionListener() {
+            int timeLeft = 30;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                timeLeft--;
+                timerLabel.setText(String.valueOf(timeLeft));
+                if (timeLeft <= 0) {
+                    ((Timer)e.getSource()).stop();
+                    inviteDialog.dispose();
+                    controller.respondToInvitation(false, opponentUsername, user.getUsername());
+                }
+            }
+        });
+    
+        acceptButton.addActionListener(e -> {
+            timer.stop();
+            inviteDialog.dispose();
+            controller.respondToInvitation(true,  opponentUsername, user.getUsername());
+        });
+    
+        declineButton.addActionListener(e -> {
+            timer.stop();
+            inviteDialog.dispose();
+            controller.respondToInvitation(false, opponentUsername, user.getUsername());
+        });
+    
+        timer.start();
+        inviteDialog.setVisible(true);
+    }
+
+    @Override
+    public void onBeingDeclined() {
+        if (inviteDialog != null) {
+            inviteDialog.dispose();
+        }
+        JOptionPane.showMessageDialog(this, "Lời mời vào trận của bạn đã bị từ chối", "Lời mời vào trận bị từ chối", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    @Override
+    public void onBeingOffline() {
+        NotificationDialog dialog = new NotificationDialog("Người chơi hiện không online, vui lòng chọn người khác.", 3000);
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+    }
+
+    @Override
     public void onPlayGameState(boolean status) {
         if (status) {
+            if (isRandom) {
+                
+            }
+
             dispose();
             try {
                 new CrosswordGameScreen(user);
@@ -219,9 +296,6 @@ public class HomeScreen extends JFrame implements HomeScreenController.onActionR
                 controller = null;
             } catch (Exception e) {}
 
-        } else {
-            NotificationDialog dialog = new NotificationDialog("Người chơi hiện không online, vui lòng chọn người khác.", 3000);
-            dialog.setVisible(true);
         }
     }
 

@@ -52,7 +52,7 @@ public class ClientHandler extends Throwable implements Runnable {
 
     public void sendMessage(String responseReturn, String route){
         ResponseWrapper response = new ResponseWrapper("", responseReturn, route);
-        System.out.println(clientSocketXXX.isConnected() + "" + clientSocketXXX.getRemoteSocketAddress() + "<-- 200: OK : Send Message {" + responseReturn + "} from " + Thread.currentThread().getName());
+        System.out.println(clientSocketXXX.isConnected() + "" + clientSocketXXX.getRemoteSocketAddress() + " <-- 200: OK : Send Message {" + responseReturn + "} from " + Thread.currentThread().getName());
         out.println(gson.toJson(response));
         out.flush();
     }
@@ -156,12 +156,18 @@ public class ClientHandler extends Throwable implements Runnable {
                         responseReturn = gson.toJson(listUser);
                     } catch (Exception e) {}
 
-                } else if (a.equals("/playGameUser")) {
+                } else if (a.equals("/invitePlay")) {
                     try {
                         Map<String, String> data = (Map<String, String>) request.getData();
                         String userNamePlayWith = data.get("opponent");
                         if (Server.listClientConnection.containsKey(userNamePlayWith) && !userNamePlayWith.equals(data.get("currUser"))) {
-                            Executors.newFixedThreadPool(4).submit(new GamePlayHandler(this, Server.listClientConnection.get(userNamePlayWith)));
+                            ClientHandler opponentClientHandler = Server.listClientConnection.get(userNamePlayWith);
+
+                            JsonObject returnJson = new JsonObject();
+                            returnJson.addProperty("invitedBy", data.get("currUser"));
+                            returnJson.addProperty("message", "your are invited to join a game");
+                            responseReturn = returnJson.toString();
+                            opponentClientHandler.sendMessage(responseReturn, "/beInvited");
                             continue;
 
                         } else {
@@ -170,6 +176,29 @@ public class ClientHandler extends Throwable implements Runnable {
                             returnJson.addProperty("message", "player is offline now");
                             responseReturn = returnJson.toString();
 
+                        }
+                    } catch (Exception e) {
+                        System.out.println(e);
+                    }
+
+                } else if (a.equals("/respondToInvitation")) {
+                    try {
+                        Map<String, String> data = (Map<String, String>) request.getData();
+                        boolean status = Boolean.parseBoolean(data.get("status"));
+                        String userNamePlayWith = data.get("opponent");
+                        
+                        if (status && Server.listClientConnection.containsKey(userNamePlayWith) && !userNamePlayWith.equals(data.get("currUser"))) {
+                            Executors.newFixedThreadPool(4).submit(new GamePlayHandler(this, Server.listClientConnection.get(userNamePlayWith)));
+                            continue;
+
+                        } else if (!status) {
+                            ClientHandler opponentClientHandler = Server.listClientConnection.get(data.get("opponent"));
+                            JsonObject returnJson = new JsonObject();
+                            returnJson.addProperty("status", String.valueOf(false));
+                            returnJson.addProperty("message", "your invitation has been declined");
+                            responseReturn = returnJson.toString();
+                            opponentClientHandler.sendMessage(responseReturn, "/respondToInvitation");
+                            continue;
                         }
                     } catch (Exception e) {
                         System.out.println(e);
