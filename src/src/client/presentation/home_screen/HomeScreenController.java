@@ -11,12 +11,13 @@ import src.client.common.BaseClientController;
 import src.client.common.onAction;
 import src.client.data.dto.User;
 
-public class HomeScreenController extends BaseClientController{
+public class HomeScreenController extends BaseClientController {
     
     private final onActionResponseHomeScreen listener;
     public interface onActionResponseHomeScreen {
         void onListUserRes(List<User> listUser);
         void onPlayGameState(boolean status);
+        void onLogout(String status);
     }
     public HomeScreenController(onActionResponseHomeScreen listener) throws IOException {
         this.listener = listener;
@@ -30,11 +31,11 @@ public class HomeScreenController extends BaseClientController{
             public void onSuccess(String data) {
                 ResponseWrapper rp = gson.fromJson(JsonParser.parseString(data), ResponseWrapper.class);
                 String route = rp.route;
-                if(route.equals("/getListUser")){
+                if (route.equals("/getListUser")) {
                     List<User> list = gson.fromJson(rp.data, new TypeToken<List<User>>(){}.getType());
                     listener.onListUserRes(list);
-                }
-                else if(route.equals("/playGameUser")){
+
+                } else if (route.equals("/playGameUser")){
                     try {
                         JsonObject result = gson.fromJson(rp.data, JsonObject.class);
                         boolean status = result.get("status").getAsBoolean();
@@ -42,8 +43,12 @@ public class HomeScreenController extends BaseClientController{
                     } catch (Exception e) {
                         System.out.println(e);
                     }
-                }
-                else if(route.equals("/test")){
+
+                } else if (route.equals("/doLogout")) {
+                    String status = rp.data;
+                    listener.onLogout(status);
+
+                } else if(route.equals("/test")){
                     System.out.println(data);
                 }
             }
@@ -75,5 +80,9 @@ public class HomeScreenController extends BaseClientController{
         body.addProperty("opponent", username);
         body.addProperty("currUser", currUser);
         doJsonRequest(body, "/playGameUser");
+    }
+
+    public void onLogout(User user) {
+        doJsonRequest(user, "/doLogout");
     }
 }

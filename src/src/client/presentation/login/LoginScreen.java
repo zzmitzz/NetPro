@@ -199,6 +199,13 @@ public class LoginScreen implements LoginScreenController.onActionResponse {
             System.out.println(ex);
         }
     }
+
+    @Override
+    public void loginCallback(String status) {
+        if (status.equals("account is already logged in")) {
+            JOptionPane.showMessageDialog(frame, "Tài khoản của bạn đang online trên một thiết bị khác.\nVui lòng đăng xuất.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
     
     @Override
     public void registerCallback() {

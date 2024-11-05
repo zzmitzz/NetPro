@@ -15,6 +15,7 @@ public class LoginScreenController extends BaseClientController {
 
     public interface onActionResponse {
         void loginCallback(User user);
+        void loginCallback(String status);
         void registerCallback();
     }
 
@@ -25,14 +26,19 @@ public class LoginScreenController extends BaseClientController {
             public void onSuccess(String data) {
                 ResponseWrapper rp = gson.fromJson(JsonParser.parseString(data), ResponseWrapper.class);
                 String route = rp.route;
-                if(route.equals("/doLogin")){
-                    JsonObject jsonObject = JsonParser.parseString(rp.data).getAsJsonObject();
-                    listener.loginCallback(new User(
-                            jsonObject.get("fullName").getAsString(),
-                            jsonObject.get("username").getAsString(),
-                            jsonObject.get("password").getAsString(),
-                            jsonObject.get("score").getAsDouble()
-                    ));
+                if(route.equals("/doLogin")) {
+                    try {
+                        JsonObject jsonObject = JsonParser.parseString(rp.data).getAsJsonObject();
+                        listener.loginCallback(new User(
+                                jsonObject.get("fullName").getAsString(),
+                                jsonObject.get("username").getAsString(),
+                                jsonObject.get("password").getAsString(),
+                                jsonObject.get("score").getAsDouble()
+                        ));
+                    } catch (Exception e) {
+                        String status = rp.data;
+                        listener.loginCallback(status);
+                    }
                 } else if (route.equals("/test")) {
                     System.out.println(data);
                 }

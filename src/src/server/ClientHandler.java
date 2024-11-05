@@ -84,19 +84,38 @@ public class ClientHandler extends Throwable implements Runnable {
                                 data.get("password").toString(),
                                 0.0
                         );
+
                         if (!Server.listClientConnection.containsKey(user.getUsername())) {
                             User returnUser = svUC.onLogin(user.getUsername(), user.getPassword());
                             Server.listClientConnection.put(returnUser.getUsername(), this);
                             this.user = returnUser;
                             responseReturn = gson.toJson(returnUser);
-                        }
-                        else{
-                            responseReturn  = "null";
+
+                        } else{
+                            responseReturn  = "account is already logged in";
                         }
 
                     } catch (NumberFormatException e) {
                         System.out.println("Exception caused" + e.toString());
                     }
+
+                } else if (a.equals("/doLogout")) {
+                    Map<String, Object> data = (Map<String, Object>) request.getData();
+
+                    User user = new User(
+                                data.get("fullName").toString(),
+                                data.get("username").toString(),
+                                data.get("password").toString(),
+                                0.0
+                        );
+
+                    if (Server.listClientConnection.containsKey(user.getUsername())) {
+                        Server.listClientConnection.remove(user.getUsername());
+                        responseReturn = "successfully logout";
+                    } else {
+                        responseReturn = "error on logout";
+                    }
+
                 } else if (a.equals("/doRegister")) {
                     try {
                         Map<String, Object> data = (Map<String, Object>) request.getData();
@@ -134,8 +153,8 @@ public class ClientHandler extends Throwable implements Runnable {
                     try {
                         List<User> listUser = svUC.getListUser();
                         responseReturn = gson.toJson(listUser);
-                    } catch (Exception e) {
-                    }
+                    } catch (Exception e) {}
+
                 } else if (a.equals("/playGameUser")) {
                     try {
                         Map<String, String> data = (Map<String, String>) request.getData();
@@ -152,6 +171,7 @@ public class ClientHandler extends Throwable implements Runnable {
                     } catch (Exception e) {
                         System.out.println(e);
                     }
+
                 } else if(a.equals("/postAnswer")){
                     Map<String, String> data = (Map<String, String>) request.getData();
                     String idQuestion = data.get("id");
@@ -159,6 +179,7 @@ public class ClientHandler extends Throwable implements Runnable {
                     long timeStamp = Long.parseLong(data.get("timeStamp"));
                     String type = data.get("type");
                     gameController.receiveAnswer(this, new Answer(idQuestion,userAns,timeStamp,type));
+
                 } else if(a.equals("/postScore")){
                     Map<String, Double> data = (Map<String, Double>) request.getData();
                     double point = data.get("score");

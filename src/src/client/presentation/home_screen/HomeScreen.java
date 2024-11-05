@@ -82,12 +82,18 @@ public class HomeScreen extends JFrame implements HomeScreenController.onActionR
         inviteButton.addActionListener((ActionEvent e) -> {
             controller.invitePlay("usernameSelected", user.getUsername());
         });
+
         JButton randomButton = createFancyButton("Chơi random");
+
         JButton instructionButton = createFancyButton("Hướng dẫn");
         instructionButton.addActionListener((ActionEvent e) -> {
             new TutorialScreen();
         });
+
         JButton logoutButton = createFancyButton("Đăng xuất");
+        logoutButton.addActionListener((ActionEvent e) -> {
+            controller.onLogout(user);
+        });
 
         buttonPanel.add(inviteButton);
         buttonPanel.add(randomButton);
@@ -171,5 +177,21 @@ public class HomeScreen extends JFrame implements HomeScreenController.onActionR
             NotificationDialog dialog = new NotificationDialog("Người chơi hiện không Online, chọn người khác đi ba.", 3000);
             dialog.show();
         }
+    }
+
+    @Override
+    public void onLogout(String status) {
+        controller.onCloseLiveUpdate(controller.getClass().getName());
+        controller.callbackAction = null;
+        controller = null;
+
+        SwingUtilities.invokeLater(() -> {
+            dispose();
+            try {
+                new LoginScreen();
+            } catch (Exception e) {
+                Logger.getLogger(HomeScreen.class.getName()).log(Level.SEVERE, null, e);
+            }
+        });
     }
 }
