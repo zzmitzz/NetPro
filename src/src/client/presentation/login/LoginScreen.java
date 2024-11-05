@@ -167,15 +167,7 @@ public class LoginScreen implements LoginScreenController.onActionResponse {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
-                try {
-                    new RegisterScreen();
-                    getController().onCloseLiveUpdate(getController().getClass().getName());
-                    getController().callbackAction = null;
-                    controller = null;
-                } catch (IOException ex) {
-                    Logger.getLogger(LoginScreen.class.getName()).log(Level.SEVERE, null, ex);
-                    System.out.println(ex);
-                }
+                new RegisterScreen();
             }
         });
         

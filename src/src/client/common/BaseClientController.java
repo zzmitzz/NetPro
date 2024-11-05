@@ -48,15 +48,13 @@ public abstract class BaseClientController {
         clientConnection.startListenning(new Response() {
             @Override
             public void onSuccess(String data) {
-                System.out.println("- DEBUG 3: " + (callbackAction == null));
-
                 if (callbackAction == null) {
                     System.out.println("null");
                 }
 
                 if (callbackAction != null) {
                     try {
-                        System.out.println("DEBUG" + callbackAction.hashCode());
+                        System.out.println("DEBUG " + callbackAction.hashCode());
                         callbackAction.onSuccess(data);
                     } catch (Exception e) {
                         e.printStackTrace();

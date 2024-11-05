@@ -8,6 +8,8 @@ import java.io.IOException;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
+import java.io.StringReader;
 
 import src.ResponseWrapper;
 import src.client.common.BaseClientController;
@@ -22,7 +24,7 @@ public class RegisterScreenController extends BaseClientController {
     private final onActionResponse listener;
 
     public interface onActionResponse {
-        void registerCallback(User user);
+        void registerCallback(String status);
     }
 
     public RegisterScreenController(onActionResponse action) throws IOException {
@@ -32,15 +34,10 @@ public class RegisterScreenController extends BaseClientController {
             public void onSuccess(String data) {
                 ResponseWrapper rp = gson.fromJson(JsonParser.parseString(data), ResponseWrapper.class);
                 String route = rp.route;
-                if (route.equals("/doRegistery")) {
-                    JsonObject jsonObject = JsonParser.parseString(rp.data).getAsJsonObject();
-                    System.out.println(jsonObject.get("data").getAsString());
-                    listener.registerCallback(new User(
-                            jsonObject.get("fullName").getAsString(),
-                            jsonObject.get("username").getAsString(),
-                            jsonObject.get("password").getAsString(),
-                            jsonObject.get("score").getAsDouble()
-                    ));
+
+                if (route.equals("/doRegister")) {
+                    String status = rp.data;
+                    listener.registerCallback(status);
                 }
             }
 

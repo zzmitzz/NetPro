@@ -188,16 +188,21 @@ public class RegisterScreen implements RegisterScreenController.onActionResponse
     }
 
     @Override
-    public void registerCallback(User user) {
-        frame.dispose();
-        try {
-            new HomeScreen(user);
-            getController().onCloseLiveUpdate(getController().getClass().getName());
-            getController().callbackAction = null;
-            controller = null;
-        } catch (IOException ex) {
-            Logger.getLogger(RegisterScreen.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println(ex);
+    public void registerCallback(String status) {
+        if (status.equals("successfully create account")) {
+            JOptionPane.showMessageDialog(frame, "Tạo tài khoản thành công", "Success", JOptionPane.INFORMATION_MESSAGE);
+            frame.dispose();
+            try {
+                new LoginScreen();
+                getController().onCloseLiveUpdate(getController().getClass().getName());
+                getController().callbackAction = null;
+                controller = null;
+            } catch (IOException ex) {
+                Logger.getLogger(RegisterScreen.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println(ex);
+            }
+        } else {
+            JOptionPane.showMessageDialog(frame, "Username đã tồn tại, vui lòng thử lại.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

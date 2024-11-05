@@ -17,6 +17,7 @@ import src.client.common.NotificationDialog;
 import src.client.data.dto.User;
 import src.client.presentation.login.LoginScreen;
 import src.client.presentation.play_game.CrosswordGameScreen;
+import src.client.presentation.tutorial.TutorialScreen;
 
 public class HomeScreen extends JFrame implements HomeScreenController.onActionResponseHomeScreen {
 
@@ -83,6 +84,9 @@ public class HomeScreen extends JFrame implements HomeScreenController.onActionR
         });
         JButton randomButton = createFancyButton("Chơi random");
         JButton instructionButton = createFancyButton("Hướng dẫn");
+        instructionButton.addActionListener((ActionEvent e) -> {
+            new TutorialScreen();
+        });
         JButton logoutButton = createFancyButton("Đăng xuất");
 
         buttonPanel.add(inviteButton);
