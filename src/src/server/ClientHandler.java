@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -51,7 +52,7 @@ public class ClientHandler extends Throwable implements Runnable {
 
     public void sendMessage(String responseReturn, String route){
         ResponseWrapper response = new ResponseWrapper("", responseReturn, route);
-        System.out.println(clientSocketXXX.isConnected()+"" + clientSocketXXX.getRemoteSocketAddress() + "<-- 200: OK : Send Message {" + responseReturn + "} from " + Thread.currentThread().getName());
+        System.out.println(clientSocketXXX.isConnected() + "" + clientSocketXXX.getRemoteSocketAddress() + "<-- 200: OK : Send Message {" + responseReturn + "} from " + Thread.currentThread().getName());
         out.println(gson.toJson(response));
         out.flush();
     }
@@ -160,37 +161,41 @@ public class ClientHandler extends Throwable implements Runnable {
                         Map<String, String> data = (Map<String, String>) request.getData();
                         String userNamePlayWith = data.get("opponent");
                         if (Server.listClientConnection.containsKey(userNamePlayWith) && !userNamePlayWith.equals(data.get("currUser"))) {
-                            Executors.newFixedThreadPool(4).submit(new GamePlayHandler(this,Server.listClientConnection.get(userNamePlayWith) ));
+                            Executors.newFixedThreadPool(4).submit(new GamePlayHandler(this, Server.listClientConnection.get(userNamePlayWith)));
                             continue;
+
                         } else {
                             JsonObject returnJson = new JsonObject();
                             returnJson.addProperty("status", false);
-                            returnJson.addProperty("message", "Player now is offline");
+                            returnJson.addProperty("message", "player is offline now");
                             responseReturn = returnJson.toString();
+
                         }
                     } catch (Exception e) {
                         System.out.println(e);
                     }
 
-                } else if(a.equals("/postAnswer")){
+                } else if (a.equals("/postAnswer")){
                     Map<String, String> data = (Map<String, String>) request.getData();
                     String idQuestion = data.get("id");
                     String userAns = data.get("answer");
                     long timeStamp = Long.parseLong(data.get("timeStamp"));
                     String type = data.get("type");
-                    gameController.receiveAnswer(this, new Answer(idQuestion,userAns,timeStamp,type));
+                    gameController.receiveAnswer(this, new Answer(idQuestion, userAns, timeStamp, type));
 
                 } else if(a.equals("/postScore")){
                     Map<String, Double> data = (Map<String, Double>) request.getData();
                     double point = data.get("score");
-                    gameController.receiveScore(this,point);
+                    gameController.receiveScore(this, point);
+
                 }
 
-                if(responseReturn.isEmpty()) continue;
+                if (responseReturn.isEmpty()) continue;
                 ResponseWrapper response = new ResponseWrapper("", responseReturn, a);
                 System.out.println(clientSocketXXX.isConnected() + "" + clientSocketXXX.getRemoteSocketAddress() + " <-- 200: OK | Send Message: {" + responseReturn + "} from " + Thread.currentThread().getName());
                 out.println(gson.toJson(response));
                 out.flush();
+
             } catch (JsonSyntaxException e) {
                 System.out.println("Fail" + e);
             }

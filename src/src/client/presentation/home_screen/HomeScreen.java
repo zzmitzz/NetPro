@@ -27,6 +27,11 @@ public class HomeScreen extends JFrame implements HomeScreenController.onActionR
     private Object[][] data;
     private DefaultTableModel model;
     private User user;
+
+    private JTable userTable;
+    private String selectedUsername;
+
+    private java.util.List<String> listOnlineUser;
     
     public HomeScreen(User user) throws IOException {
         this.controller = new HomeScreenController(this);
@@ -35,6 +40,7 @@ public class HomeScreen extends JFrame implements HomeScreenController.onActionR
         setSize(800, 600);
         setLayout(new BorderLayout());
         this.user = user;
+
         // Create a panel for the username
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -42,7 +48,9 @@ public class HomeScreen extends JFrame implements HomeScreenController.onActionR
         userLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         topPanel.add(userLabel, BorderLayout.EAST);
         add(topPanel, BorderLayout.NORTH);
+
         controller.getUserList();
+        controller.getOnlineUserList();
 
         addWindowListener(new WindowListener() {
             @Override
@@ -74,16 +82,46 @@ public class HomeScreen extends JFrame implements HomeScreenController.onActionR
             @Override
             public void windowDeactivated(WindowEvent e) {}
         });
+
         // Create styled buttons
         JPanel buttonPanel = new JPanel(new GridLayout(4, 1, 10, 10));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JButton inviteButton = createFancyButton("Gửi lời mời");
         inviteButton.addActionListener((ActionEvent e) -> {
-            controller.invitePlay("usernameSelected", user.getUsername());
+            if (selectedUsername == null || selectedUsername.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                    "Vui lòng chọn người chơi trước khi gửi lời mời",
+                    "Cảnh báo",
+                    JOptionPane.WARNING_MESSAGE);
+            } else if (selectedUsername.equals(user.getUsername())) {
+                JOptionPane.showMessageDialog(this,
+                    "Không thể gửi lời mời cho chính mình",
+                    "Cảnh báo",
+                    JOptionPane.WARNING_MESSAGE);
+
+            } else {
+                controller.invitePlay(selectedUsername, user.getUsername());
+            }
         });
 
         JButton randomButton = createFancyButton("Chơi random");
+        randomButton.addActionListener((ActionEvent e) -> {
+            if (selectedUsername == null || selectedUsername.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                    "Vui lòng chọn người chơi trước khi gửi lời mời",
+                    "Cảnh báo",
+                    JOptionPane.WARNING_MESSAGE);
+            } else if (selectedUsername.equals(user.getUsername())) {
+                JOptionPane.showMessageDialog(this,
+                    "Không thể gửi lời mời cho chính mình",
+                    "Cảnh báo",
+                    JOptionPane.WARNING_MESSAGE);
+
+            } else {
+                controller.invitePlay(selectedUsername, user.getUsername());
+            }
+        });
 
         JButton instructionButton = createFancyButton("Hướng dẫn");
         instructionButton.addActionListener((ActionEvent e) -> {
@@ -123,59 +161,67 @@ public class HomeScreen extends JFrame implements HomeScreenController.onActionR
 
     @Override
     public void onListUserRes(java.util.List<User> listUser) {
-        
         Collections.sort(listUser, new Comparator<User>() {
-           
             @Override
             public int compare(User o1, User o2) {
-                if(o1.score >= o2.score){
+                if (o1.score >= o2.score) {
                     return -1;
-                }else{
+                } else {
                     return 1;
                 }
             }
-            
         });
+
         data = new Object[listUser.size()][3];
-        
         for (int i = 0; i < listUser.size(); i++) {
             User user = listUser.get(i);
-            data[i][0] = user.getUsername(); // Assuming User has getUsername() method
-            data[i][1] = user.getFullName(); // Assuming User has getPassword() method
-            data[i][2] = user.getScore(); // Assuming User has getFullname() method
+            data[i][0] = user.getUsername(); 
+            data[i][1] = user.getFullName();
+            data[i][2] = user.getScore();
         }
+
         // Create table
         String[] columnNames = {"Danh sách người chơi", "Tên ", "Điểm"};
-        model= new DefaultTableModel(data, columnNames) {
+        model = new DefaultTableModel(data, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // All cells are non-editable
+                return false;
             }
         };
-        JTable table = new JTable(model);
-        JScrollPane scrollPane = new JScrollPane(table);
+        userTable = new JTable(model);
+        userTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        userTable.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int selectedRow = userTable.getSelectedRow();
+                if (selectedRow >= 0) {
+                    selectedUsername = (String) userTable.getValueAt(selectedRow, 0);
+                }
+            }
+        });
+
+        JScrollPane scrollPane = new JScrollPane(userTable);
         add(scrollPane, BorderLayout.CENTER);
-        table.setBackground(new Color(0xe6e6e6));
-        table.setFillsViewportHeight(true);
+        userTable.setBackground(new Color(0xe6e6e6));
+        userTable.setFillsViewportHeight(true);
         revalidate();
         repaint();
     }
 
     @Override
     public void onPlayGameState(boolean status) {
-        if(status){
+        if (status) {
             dispose();
-            try{
+            try {
                 new CrosswordGameScreen(user);
                 controller.onCloseLiveUpdate(controller.getClass().getName());
                 controller.callbackAction = null;
                 controller = null;
-            }catch (Exception e){
+            } catch (Exception e) {}
 
-            }
-        }else{
-            NotificationDialog dialog = new NotificationDialog("Người chơi hiện không Online, chọn người khác đi ba.", 3000);
-            dialog.show();
+        } else {
+            NotificationDialog dialog = new NotificationDialog("Người chơi hiện không online, vui lòng chọn người khác.", 3000);
+            dialog.setVisible(true);
         }
     }
 

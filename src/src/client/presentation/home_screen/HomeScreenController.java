@@ -35,11 +35,12 @@ public class HomeScreenController extends BaseClientController {
                     List<User> list = gson.fromJson(rp.data, new TypeToken<List<User>>(){}.getType());
                     listener.onListUserRes(list);
 
-                } else if (route.equals("/playGameUser")){
+                } else if (route.equals("/playGameUser")) {
                     try {
                         JsonObject result = gson.fromJson(rp.data, JsonObject.class);
                         boolean status = result.get("status").getAsBoolean();
                         listener.onPlayGameState(status);
+
                     } catch (Exception e) {
                         System.out.println(e);
                     }
@@ -60,7 +61,7 @@ public class HomeScreenController extends BaseClientController {
             public void onFail() {
             }
         };
-        System.out.println("CAllback init" + Thread.currentThread().getName());
+        System.out.println("Callback init" + Thread.currentThread().getName());
         onStartLiveUpdate(this.getClass().getName());
 
         // Verify callback was set
@@ -70,12 +71,16 @@ public class HomeScreenController extends BaseClientController {
             System.out.println("[DEBUG] HomeScreen - Callback successfully set");
         }
     }
-    public void getUserList(){
+
+    public void getUserList() {
         doJsonRequest(null, "/getListUser");
+    }
+
+    public void getOnlineUserList() {
+        doJsonRequest(null, "/getOnlineUserList");
     }
     
     public void invitePlay(String username, String currUser){
-        username = "2";
         JsonObject body = new JsonObject();
         body.addProperty("opponent", username);
         body.addProperty("currUser", currUser);

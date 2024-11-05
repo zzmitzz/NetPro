@@ -45,8 +45,10 @@ public class GamePlayHandler<T> implements Runnable {
     public GamePlayHandler(ClientHandler p1, ClientHandler p2) {
         this.player1 = p1;
         this.player2 = p2;
+
         player1.setGameController(this);
         player2.setGameController(this);
+
         initQuestion();
     }
 
@@ -127,10 +129,13 @@ public class GamePlayHandler<T> implements Runnable {
 
     public void startGame() {
         JsonObject returnJson = new JsonObject();
+
         returnJson.addProperty("status", true);
         returnJson.addProperty("message", "Let play");
+
         player1.sendMessage(returnJson.toString(), "/playGameUser");
         player2.sendMessage(returnJson.toString(), "/playGameUser");
+
         sendNextQuestion();
     }
 
@@ -141,11 +146,13 @@ public class GamePlayHandler<T> implements Runnable {
             timer = null;
             return;
         }
+
         Question question = questions.get("honghainhi").get(questionNumber.get());
         if (timer != null) {
             timer.stop();
             timer = null;
         }
+
         timer = new Timer(1000, new ActionListener() {
             int timeLeft = 30; // Starting time
 
@@ -158,12 +165,14 @@ public class GamePlayHandler<T> implements Runnable {
                     player1.sendMessage(returnJson.toString(), "/onCountdown");
                     player2.sendMessage(returnJson.toString(), "/onCountdown");
                 }
+
                 if (timeLeft == 0) {
                     GamePlayHandler.this.sendNextQuestion();
                 }
             }
         });
         timer.start();
+        
         JsonObject returnJson = new JsonObject();
         returnJson.addProperty("question", question.ques);
         returnJson.addProperty("id", questionNumber);
@@ -175,6 +184,7 @@ public class GamePlayHandler<T> implements Runnable {
         // Schedule next question in 10 seconds, if there are more questions
         questionNumber.set(questionNumber.get() + 1);
     }
+
     public void receiveScore(ClientHandler a, double score){
         System.out.println(score);
         if(a.equals(player1)){
@@ -187,22 +197,24 @@ public class GamePlayHandler<T> implements Runnable {
             onGameFinish();
         }
     }
+
     public void receiveAnswer(ClientHandler a, Answer response) {
         if (response.id.equals((questionNumber.get() - 1) + "")) {
-            if(response.type.equalsIgnoreCase("Cột ngang")){
+            if (response.type.equalsIgnoreCase("Cột ngang")) {
                 if (response.answer.equalsIgnoreCase(questions.get("honghainhi").get((questionNumber.get() - 1)).answer)) {
                     JsonObject player1Result = new JsonObject();
                     player1Result.addProperty("status", true);
                     player1Result.addProperty("point", 100);
                     a.sendMessage(player1Result.toString(), "/onAnswerReceive");
                     sendNextQuestion();
-                }else{
+                } else {
                     JsonObject player1Result = new JsonObject();
                     player1Result.addProperty("status", false);
                     player1Result.addProperty("point", -40);
                     a.sendMessage(player1Result.toString(), "/onAnswerReceive");
                 }
-            }else{
+
+            } else {
                 if(questions.containsKey(response.answer.toLowerCase().trim())){
                     JsonObject player1Result = new JsonObject();
                     player1Result.addProperty("status", true);
