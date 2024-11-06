@@ -15,6 +15,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.Iterator;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import src.RequestWrapper;
@@ -202,6 +204,85 @@ public class ClientHandler extends Throwable implements Runnable {
                         }
                     } catch (Exception e) {
                         System.out.println(e);
+                    }
+
+                } else if (a.equals("/findGame")) {
+                    Map<String, String> data = (Map<String, String>) request.getData();
+                    String username = data.get("username");
+
+                    if (Server.listFindMatchUser.size() > 0) {
+                        List<String> keys = new ArrayList<>(Server.listFindMatchUser.keySet());
+                        Random random = new Random();
+                        String randomKey = keys.get(random.nextInt(keys.size()));
+                        ClientHandler curr = Server.listClientConnection.get(username);
+                        ClientHandler opponent = Server.listFindMatchUser.remove(randomKey);
+
+                        JsonObject returnJson = new JsonObject();
+                        returnJson.addProperty("message", "game found");
+                        responseReturn = returnJson.toString();
+
+                        curr.sendMessage(responseReturn, "/beFoundGame");
+                        opponent.sendMessage(responseReturn, "/beFoundGame");
+                        continue;
+
+                    } else {
+                        Server.listFindMatchUser.put(username, Server.listClientConnection.get(username));
+                        JsonObject returnJson = new JsonObject();
+                        returnJson.addProperty("message", "currently find match");
+                        responseReturn = returnJson.toString();
+                    }
+
+                } else if (a.equals("/cancelFindGame")) {
+                    Map<String, String> data = (Map<String, String>) request.getData();
+                    String username = data.get("username");
+                    String message = data.get("message");
+                    Server.listFindMatchUser.remove(username);
+
+                    JsonObject returnJson = new JsonObject();
+                    returnJson.addProperty("message", "successfully cancel find match");
+                    responseReturn = returnJson.toString();
+
+                } else if (a.equals("/respondOnFoundGame")) {
+                    Map<String, String> data = (Map<String, String>) request.getData();
+                    String username = data.get("username");
+                    boolean accept = Boolean.parseBoolean(data.get("accept"));
+
+                    Server.pairOfUsers.put(username, accept);
+
+                    synchronized (Server.pairOfUsers) {
+                        if (Server.pairOfUsers.size() == 2) {
+                            boolean allAccepted = true;
+                            for (boolean accepted : Server.pairOfUsers.values()) {
+                                if (!accepted) {
+                                    allAccepted = false;
+                                    break;
+                                }
+                            }
+
+                            if (allAccepted) {
+                                Iterator<String> iterator = Server.pairOfUsers.keySet().iterator();
+                                String player1Username = iterator.next();
+                                String player2Username = iterator.next();
+                                
+                                ClientHandler player1 = Server.listClientConnection.get(player1Username);
+                                ClientHandler player2 = Server.listClientConnection.get(player2Username);
+                                
+                                Server.pairOfUsers.clear();
+
+                                Executors.newFixedThreadPool(4).submit(new GamePlayHandler(player1, player2));
+                                continue;
+
+                            } else {
+                                JsonObject returnJson = new JsonObject();
+                                returnJson.addProperty("message", "game has been cancelled");
+                                responseReturn = returnJson.toString();
+                                for (String playerUsername : Server.pairOfUsers.keySet()) {
+                                    Server.listClientConnection.get(playerUsername).sendMessage(responseReturn, "/respondOnFoundGame");
+                                }
+                                Server.pairOfUsers.clear();
+                                continue;
+                            }
+                        }
                     }
 
                 } else if (a.equals("/postAnswer")){

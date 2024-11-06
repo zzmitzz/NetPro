@@ -38,6 +38,8 @@ public class HomeScreen extends JFrame implements HomeScreenController.onActionR
     private boolean isRandom = false;
 
     private JDialog inviteDialog;
+    private JDialog waitingDialog;
+    private Timer waitingTimer;
     
     public HomeScreen(User user) throws IOException {
         this.controller = new HomeScreenController(this);
@@ -111,16 +113,9 @@ public class HomeScreen extends JFrame implements HomeScreenController.onActionR
             }
         });
 
-        JButton randomButton = createFancyButton("Chơi random");
+        JButton randomButton = createFancyButton("Tìm trận");
         randomButton.addActionListener((ActionEvent e) -> {
-            isRandom = true;
-            Collections.shuffle(this.listUser);
-            boolean isExistOnlineUser = false;
-            for (User u : listUser) {
-                controller.invitePlay(u.getUsername(), user.getUsername());
-            }
-            NotificationDialog dialog = new NotificationDialog("Hiện đang không có người chơi nào online, vui lòng đợi.", 3000);
-            dialog.setVisible(true);
+            controller.onFindGame(user.getUsername());
         });
 
         JButton instructionButton = createFancyButton("Hướng dẫn");
@@ -297,6 +292,157 @@ public class HomeScreen extends JFrame implements HomeScreenController.onActionR
             } catch (Exception e) {}
 
         }
+    }
+
+    @Override 
+    public void onWaitingFindGame() {
+        SwingWorker<Void, Integer> worker = new SwingWorker<Void, Integer>() {
+            private JLabel timerLabel;
+
+            @Override
+            protected Void doInBackground() {
+                SwingUtilities.invokeLater(() -> {
+                    createAndShowDialog();
+                });
+                return null;
+            }
+
+            private void createAndShowDialog() {
+                // Store references at class level
+                waitingDialog = new JDialog(HomeScreen.this, "Đang tìm trận", true);
+                waitingDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                waitingDialog.setLayout(new BorderLayout(10, 10));
+                waitingDialog.setSize(300, 150);
+                waitingDialog.setLocationRelativeTo(HomeScreen.this);
+
+                // Rest of dialog setup remains same
+                JPanel messagePanel = new JPanel();
+                JLabel messageLabel = new JLabel("<html>Đang tìm trận</html>");
+                messagePanel.add(messageLabel);
+                waitingDialog.add(messagePanel, BorderLayout.CENTER);
+
+                timerLabel = new JLabel("0");
+                waitingDialog.add(timerLabel, BorderLayout.NORTH);
+
+                JPanel buttonPanel = new JPanel(new FlowLayout());
+                JButton cancelButton = new JButton("Hủy tìm trận");
+                buttonPanel.add(cancelButton);
+                waitingDialog.add(buttonPanel, BorderLayout.SOUTH);
+
+                // Store timer reference at class level
+                waitingTimer = new Timer(1000, e -> {
+                    int currentValue = Integer.parseInt(timerLabel.getText());
+                    publish(currentValue + 1);
+                });
+
+                cancelButton.addActionListener(e -> {
+                    controller.onCancelFindGame(user.getUsername());
+                    cleanup();
+                });
+
+                waitingTimer.start();
+                waitingDialog.setVisible(true);
+            }
+
+            @Override
+            protected void process(List<Integer> chunks) {
+                int lastValue = chunks.get(chunks.size() - 1);
+                timerLabel.setText(String.valueOf(lastValue));
+            }
+
+            private void cleanup() {
+                if (waitingTimer != null) {
+                    waitingTimer.stop();
+                }
+                if (waitingDialog != null) {
+                    waitingDialog.dispose();
+                }
+            }
+        };
+
+        worker.execute();
+    }
+
+    @Override
+    public void onFoundGame() {
+        SwingUtilities.invokeLater(() -> {
+            if (waitingTimer != null) {
+                waitingTimer.stop();
+            }
+            if (waitingDialog != null && waitingDialog.isVisible()) {
+                waitingDialog.setVisible(false);
+                waitingDialog.dispose();
+            }
+
+            inviteDialog = new JDialog(this, "Đã tìm thấy trận", true);
+            inviteDialog.setLayout(new BorderLayout(10, 10));
+            inviteDialog.setSize(300, 150);
+            inviteDialog.setLocationRelativeTo(this);
+        
+            // Message panel
+            JPanel messagePanel = new JPanel();
+            JLabel messageLabel = new JLabel("<html>Đã tìm thấy trận<br>Chấp nhận tham gia?</html>");
+            messagePanel.add(messageLabel);
+            inviteDialog.add(messagePanel, BorderLayout.CENTER);
+        
+            // Timer label
+            JLabel timerLabel = new JLabel("10");
+            inviteDialog.add(timerLabel, BorderLayout.NORTH);
+        
+            // Buttons panel
+            JPanel buttonPanel = new JPanel(new FlowLayout());
+            JButton acceptButton = new JButton("Có");
+            JButton declineButton = new JButton("Không");
+        
+            buttonPanel.add(acceptButton);
+            buttonPanel.add(declineButton);
+            inviteDialog.add(buttonPanel, BorderLayout.SOUTH);
+        
+            // Timer
+            Timer timer = new Timer(1000, new ActionListener() {
+                int timeLeft = 10;
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    timeLeft--;
+                    timerLabel.setText(String.valueOf(timeLeft));
+                    if (timeLeft <= 0) {
+                        ((Timer)e.getSource()).stop();
+                        inviteDialog.dispose();
+                        controller.respondToFoundGame(user.getUsername(), false);
+                    }
+                }
+            });
+
+            acceptButton.addActionListener(e -> {
+                timer.stop();
+                inviteDialog.dispose();
+                controller.respondToFoundGame(user.getUsername(), true);
+            });
+        
+            declineButton.addActionListener(e -> {
+                timer.stop();
+                inviteDialog.dispose();
+                controller.respondToFoundGame(user.getUsername(), false);
+            });
+        
+            timer.start();
+            inviteDialog.setVisible(true);
+        });
+    }
+
+    @Override
+    public void onCancelRandomInivation() {
+        if (inviteDialog != null) {
+            inviteDialog.setVisible(false);
+            inviteDialog.dispose();
+            inviteDialog = null;
+        }
+
+        JOptionPane.showMessageDialog(this, 
+                            "Trận đấu đã bị hủy do đối thủ từ chối!", 
+                                    "Trận đấu bị hủy",
+                                    JOptionPane.INFORMATION_MESSAGE
+        );
     }
 
     @Override

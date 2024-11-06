@@ -19,6 +19,9 @@ public class HomeScreenController extends BaseClientController {
         void onBeingInvited(String opponentUsername);
         void onBeingDeclined();
         void onBeingOffline();
+        void onWaitingFindGame();
+        void onFoundGame();
+        void onCancelRandomInivation();
         void onPlayGameState(boolean status);
         void onLogout(String status);
     }
@@ -62,6 +65,21 @@ public class HomeScreenController extends BaseClientController {
                     JsonObject result = gson.fromJson(rp.data, JsonObject.class);
                     String opponentUsername = result.get("invitedBy").getAsString();
                     listener.onBeingInvited(opponentUsername);
+
+                } else if (route.equals("/findGame")) {
+                    JsonObject result = gson.fromJson(rp.data, JsonObject.class);
+                    String message = result.get("message").getAsString();
+                    listener.onWaitingFindGame();
+
+                } else if (route.equals("/beFoundGame")) {
+                    JsonObject result = gson.fromJson(rp.data, JsonObject.class);
+                    String message = result.get("message").getAsString();
+                    listener.onFoundGame();
+
+                } else if (route.equals("/respondOnFoundGame")) {
+                    JsonObject result = gson.fromJson(rp.data, JsonObject.class);
+                    String message = result.get("message").getAsString();
+                    listener.onCancelRandomInivation();
 
                 } else if (route.equals("/doLogout")) {
                     String status = rp.data;
@@ -107,6 +125,26 @@ public class HomeScreenController extends BaseClientController {
         body.addProperty("opponent", username);
         body.addProperty("currUser", currUser);
         doJsonRequest(body, "/invitePlay");
+    }
+
+    public void onFindGame(String username) {
+        JsonObject body = new JsonObject();
+        body.addProperty("username", username);
+        doJsonRequest(body, "/findGame");
+    }
+
+    public void onCancelFindGame(String username) {
+        JsonObject body = new JsonObject();
+        body.addProperty("username", username);
+        body.addProperty("message", "cancel find game");
+        doJsonRequest(body, "/cancelFindGame");
+    }
+
+    public void respondToFoundGame(String username, boolean accept) {
+        JsonObject body = new JsonObject();
+        body.addProperty("username", username);
+        body.addProperty("accept", String.valueOf(accept));
+        doJsonRequest(body, "/respondOnFoundGame");
     }
 
     public void onLogout(User user) {
