@@ -5,30 +5,44 @@
 package src.client.presentation.signup;
 
 import java.io.IOException;
+import java.util.Objects;
 
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonReader;
-import java.io.StringReader;
 
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 import src.ResponseWrapper;
 import src.client.common.BaseClientController;
 import src.client.common.onAction;
 import src.client.data.dto.User;
+import src.client.presentation.home_screen.HomeScreenController;
+
+import javax.swing.*;
 
 /**
- *
  * @author 1
  */
 public class RegisterScreenController extends BaseClientController {
-    private final onActionResponse listener;
+    //    private final onActionResponse listener;
+//
+//    public interface onActionResponse {
+//        void registerCallback(String status);
+//    }
+    @FXML
+    private TextField usr, pwd, confirmed_pwd, fullName;
+    @FXML
+    private Hyperlink loginLink;
 
-    public interface onActionResponse {
-        void registerCallback(String status);
-    }
-
-    public RegisterScreenController(onActionResponse action) throws IOException {
-        this.listener = action;
+    public RegisterScreenController() throws IOException {
         callbackAction = new onAction() {
             @Override
             public void onSuccess(String data) {
@@ -36,16 +50,32 @@ public class RegisterScreenController extends BaseClientController {
                 String route = rp.route;
 
                 if (route.equals("/doRegister")) {
-                    String status = rp.data;
-                    listener.registerCallback(status);
+                    if(Objects.equals(rp.status, "true")){
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                showMessage("Đăng ký thành công");
+                                try{
+                                    launchLogin();
+                                }catch (IOException e){
+
+                                }
+                            }
+                        });
+
+                    }else{
+                        showMessage(rp.data);
+                    }
                 }
             }
 
             @Override
-            public void onFail() {}
+            public void onFail() {
+            }
 
             @Override
-            public void onError(String e) {}
+            public void onError(String e) {
+            }
         };
 
         onStartLiveUpdate(getClass().getName());
@@ -60,5 +90,59 @@ public class RegisterScreenController extends BaseClientController {
                         0.0
                 ),
                 "/doRegister");
+    }
+
+    public void initialize() {}
+
+    public void register(ActionEvent e) throws IOException {
+        String username = usr.getText();
+        String password = pwd.getText();
+        String fullname = fullName.getText();
+        String confirmedPassword = confirmed_pwd.getText();
+
+        if (validateInputs(username, password, confirmedPassword)) {
+            onRegister(fullname,username, password );
+        }
+    }
+
+    private boolean validateInputs(String username, String password, String confirmedPassword) {
+        if (username.isEmpty()) {
+            showMessage("Name cannot be Empty..");
+            return false;
+        } else if (username.equals("SERVER") || username.equals("Round")) {
+            showMessage("Name \"" + username + "\" is not allowed, please change..");
+            usr.clear();
+            return false;
+        }
+        if (password.isEmpty()) {
+            showMessage("Password cannot be Empty..");
+            return false;
+        } else if (!password.equals(confirmedPassword)) {
+            showMessage("Passwords do not match !");
+            return false;
+        }
+        return true;
+    }
+
+
+
+    private void showMessage(String message) {
+        JOptionPane.showMessageDialog(null, message);
+    }
+
+    public void showLoginForm(ActionEvent ae) {
+        try {
+            launchLogin();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void launchLogin() throws IOException{
+        onCloseLiveUpdate(getClass().getName());
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../login/LoginScreen.fxml"));
+        Parent root = loader.load();
+        Stage stage = (Stage) loginLink.getScene().getWindow();
+        stage.setScene(new Scene(root));
     }
 }

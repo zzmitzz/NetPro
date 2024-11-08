@@ -4,70 +4,136 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6baf8661-b4b7-4b52-9a4d-d0d851a05a8d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/build/classes/src/Application$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/Application.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/RequestWrapper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/ResponseWrapper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/WelcomeScreen$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/WelcomeScreen$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/WelcomeScreen$ScreenCallBack.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/WelcomeScreen.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/client/common/BaseClientController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/client/common/Response.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/client/data/ClientConnection.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/client/data/ClientListenerHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/client/data/dto/User.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/home_screen/HomeScreen$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/home_screen/HomeScreen$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/home_screen/HomeScreen$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/home_screen/HomeScreen.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/home_screen/HomeScreenController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/login/LoginScreen$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/login/LoginScreen$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/login/LoginScreen$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/login/LoginScreen$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/login/LoginScreen.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/login/LoginScreenController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/play_game/CrosswordGameScreen$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/play_game/CrosswordGameScreen$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/play_game/CrosswordGameScreen.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/play_game/CrosswordGameScreenController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/signup/RegisterScreen$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/signup/RegisterScreen$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/signup/RegisterScreen$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/signup/RegisterScreen.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/client/presentation/signup/RegisterScreenController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/helper/ObjectUtils.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/server/ClientHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/server/Constant.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/server/Server.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/server/ServerConnection.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/server/database_connection/DBAction.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/server/database_connection/ServerDBConnection.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/server/usecase/ServerUsecase.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/src/server/usecase/onActionServer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/nbproject/build-impl.xml" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/build-impl.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nbproject/genfiles.properties" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/genfiles.properties" afterDir="false" />
+    <list default="true" id="6baf8661-b4b7-4b52-9a4d-d0d851a05a8d" name="Changes" comment="Hehe">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/src/MainApp.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/src/client/background1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/src/client/background2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/src/client/presentation/home_screen/HomeScreen.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/src/client/presentation/login/LoginScreen.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/src/client/presentation/signup/RegisterScreen.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/src/helper/CancelableReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FinalExerciseNetworkProgramming.iml" beforeDir="false" afterPath="$PROJECT_DIR$/FinalExerciseNetworkProgramming.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nbproject/private/private.properties" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/private/private.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nbproject/private/private.xml" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/private/private.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nbproject/project.properties" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/project.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nbproject/project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/project.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/Application$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/Application.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/Application.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/RequestWrapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/RequestWrapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/ResponseWrapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/ResponseWrapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/WelcomeScreen$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/WelcomeScreen$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/WelcomeScreen$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/WelcomeScreen$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/WelcomeScreen$ScreenCallBack.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/WelcomeScreen.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/WelcomeScreen.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/ClientApplication.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/ServiceLocator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/ServiceLocator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/common/BaseClientController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/common/BaseClientController$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/common/BaseClientController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/common/BaseClientController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/common/LoadingDialog.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/common/LoadingDialog.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/common/NotificationDialog$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/common/NotificationDialog$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/common/NotificationDialog.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/common/NotificationDialog.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/common/Response.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/common/Response.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/common/onAction.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/common/onAction.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/data/ClientConnection.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/data/ClientConnection.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/data/ClientListenerHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/data/ClientListenerHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/data/dto/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/data/dto/User.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/home_screen/HomeScreen$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/home_screen/HomeScreen$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/home_screen/HomeScreen$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/home_screen/HomeScreen$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/home_screen/HomeScreen$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/home_screen/HomeScreen$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/home_screen/HomeScreen.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/home_screen/HomeScreen.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/home_screen/HomeScreenController$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/home_screen/HomeScreenController$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/home_screen/HomeScreenController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/home_screen/HomeScreenController$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/home_screen/HomeScreenController$onActionResponseHomeScreen.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/home_screen/HomeScreenController$onActionResponseHomeScreen.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/home_screen/HomeScreenController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/home_screen/HomeScreenController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/login/LoginScreen$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/login/LoginScreen$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/login/LoginScreen$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/login/LoginScreen$4.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/login/LoginScreen$5.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/login/LoginScreen.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/login/LoginScreenController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/login/LoginScreenController$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/login/LoginScreenController$onActionResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/login/LoginScreenController$onActionResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/login/LoginScreenController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/login/LoginScreenController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/play_game/CrosswordGameScreen$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/play_game/CrosswordGameScreen$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/play_game/CrosswordGameScreen$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/play_game/CrosswordGameScreen$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/play_game/CrosswordGameScreen.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/play_game/CrosswordGameScreen.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/play_game/CrosswordGameScreenController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/play_game/CrosswordGameScreenController$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/play_game/CrosswordGameScreenController$onActionResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/play_game/CrosswordGameScreenController$onActionResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/play_game/CrosswordGameScreenController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/play_game/CrosswordGameScreenController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/signup/RegisterScreen$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/signup/RegisterScreen$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/signup/RegisterScreen$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/signup/RegisterScreen.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/signup/RegisterScreenController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/client/presentation/signup/RegisterScreenController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/helper/ObjectUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/helper/ObjectUtils.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/model/Answer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/model/Answer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/model/Question.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/model/Question.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/server/ClientHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/server/ClientHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/server/Constant.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/server/Constant.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/server/Server.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/server/Server.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/server/ServerConnection.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/server/ServerConnection.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/server/database_connection/DBAction.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/server/database_connection/DBAction.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/server/database_connection/ServerDBConnection.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/server/database_connection/ServerDBConnection.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/server/usecase/GamePlayHandler$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/server/usecase/GamePlayHandler$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/server/usecase/GamePlayHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/server/usecase/GamePlayHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/server/usecase/ServerUsecase.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/server/usecase/ServerUsecase.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/server/usecase/onActionServer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/server/usecase/onActionServer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/src/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/Application.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/src/RequestWrapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/RequestWrapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/src/ResponseWrapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/ResponseWrapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/src/WelcomeScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/WelcomeScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/src/client/ClientApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/client/ClientApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/src/client/common/BaseClientController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/client/common/BaseClientController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/src/client/data/ClientConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/client/data/ClientConnection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/src/client/presentation/home_screen/HomeScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/client/presentation/home_screen/HomeScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/src/client/presentation/home_screen/HomeScreenController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/client/presentation/home_screen/HomeScreenController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/src/client/presentation/login/LoginScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/client/presentation/login/LoginScreen.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/src/client/presentation/login/LoginScreenController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/client/presentation/login/LoginScreenController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/src/client/presentation/play_game/CrosswordGameScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/client/presentation/play_game/CrosswordGameScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/src/client/presentation/play_game/CrosswordGameScreenController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/client/presentation/play_game/CrosswordGameScreenController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/src/client/presentation/signup/RegisterScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/client/presentation/signup/RegisterScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/src/client/presentation/signup/RegisterScreenController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/client/presentation/signup/RegisterScreenController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/src/client/presentation/tutorial/TutorialScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/client/presentation/tutorial/TutorialScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/src/server/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/server/ClientHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/src/server/Constant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/server/Constant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/src/server/usecase/GamePlayHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/server/usecase/GamePlayHandler.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 7
-}]]></component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;zzmitzz&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/zzmitzz/NetPro.git&quot;,
+    &quot;accountId&quot;: &quot;9e71edfc-5c57-4aec-b99a-35e3cec2ae33&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
   <component name="ProjectId" id="2oKcsbRcSzlMvfrJqyqpJfAdTQ2" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -76,23 +142,41 @@
   "keyToString": {
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Application.Application.executor": "Run",
+    "Application.Application4234.executor": "Run",
+    "Application.ClientApplication.executor": "Run",
+    "Application.Main.executor": "Run",
+    "Application.MainApp.executor": "Run",
     "Application.RegisterScreen.executor": "Debug",
+    "Application.ServerConnection.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/datqm/Downloads/gson-2.11.0.jar",
+    "last_opened_file_path": "C:/Users/1/Desktop/Sem1_4/LTM-PTIT-main/FinalExerciseNetworkProgramming/src/src/client/presentation/signup",
     "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0"
+    "project.structure.proportion": "0.15332031",
+    "project.structure.side.proportion": "0.24249423",
+    "settings.editor.selected.configurable": "preferences.JavaFX"
   }
 }]]></component>
-  <component name="RunManager">
-    <configuration name="RegisterScreen" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="src.client.presentation.signup.RegisterScreen" />
-      <module name="NetPro" />
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\1\Desktop\Sem1_4\LTM-PTIT-main\FinalExerciseNetworkProgramming\src\src\client\presentation\signup" />
+      <recent name="C:\Users\1\Desktop\Sem1_4\LTM-PTIT-main\FinalExerciseNetworkProgramming\src\src\client\presentation\login" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\1\Desktop\Sem1_4\LTM-PTIT-main\FinalExerciseNetworkProgramming\src\src\client\presentation\home_screen" />
+      <recent name="C:\Users\1\Desktop\Sem1_4\LTM-PTIT-main\FinalExerciseNetworkProgramming\src\src" />
+      <recent name="C:\Users\1\Desktop\Sem1_4\LTM-PTIT-main\FinalExerciseNetworkProgramming\src\src\client" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.MainApp">
+    <configuration name="Application4234" type="Application" factoryName="Application" singleton="false" temporary="true">
+      <option name="MAIN_CLASS_NAME" value="src.Application" />
+      <module name="FinalExerciseNetworkProgramming" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="src.client.presentation.signup.*" />
+          <option name="PATTERN" value="src.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -100,9 +184,74 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="ClientApplication" type="Application" factoryName="Application" singleton="false" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="src.client.ClientApplication" />
+      <module name="FinalExerciseNetworkProgramming" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="src.client.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="src.Main" />
+      <module name="FinalExerciseNetworkProgramming" />
+      <option name="PROGRAM_PARAMETERS" value="D:\JAVA SDK\--module-path openjfx-23.0.1_windows-x64_bin-sdk\javafx-sdk-23.0.1\lib --add-modules javafx.controls,javafx.fxml" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="src.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MainApp" type="Application" factoryName="Application" singleton="false" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="src.MainApp" />
+      <module name="FinalExerciseNetworkProgramming" />
+      <option name="VM_PARAMETERS" value="--module-path &quot;D:\JAVA SDK\openjfx-23.0.1_windows-x64_bin-sdk\javafx-sdk-23.0.1\lib&quot; --add-modules javafx.controls,javafx.fxml" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="src.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ServerConnection" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="src.server.ServerConnection" />
+      <module name="FinalExerciseNetworkProgramming" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="src.server.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.Main" />
+      <item itemvalue="Application.MainApp" />
+      <item itemvalue="Application.Application4234" />
+      <item itemvalue="Application.ClientApplication" />
+      <item itemvalue="Application.ServerConnection" />
+    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.RegisterScreen" />
+        <item itemvalue="Application.MainApp" />
+        <item itemvalue="Application.ServerConnection" />
+        <item itemvalue="Application.Main" />
+        <item itemvalue="Application.ClientApplication" />
+        <item itemvalue="Application.Application4234" />
       </list>
     </recent_temporary>
   </component>
@@ -116,5 +265,20 @@
       <updated>1730621919812</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Hehe" />
+    <option name="LAST_COMMIT_MESSAGE" value="Hehe" />
   </component>
 </project>

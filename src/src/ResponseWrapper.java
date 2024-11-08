@@ -2,12 +2,12 @@ package src;
 
 public class  ResponseWrapper {
 
-    public String type;
-    public String data;
-    public String route;
+    public String status="";
+    public String data="";
+    public String route="";
 
-    public ResponseWrapper(String type, String data, String route) {
-        this.type = type;
+    public ResponseWrapper(String status, String data, String route) {
+        this.status = status;
         this.data = data;
         this.route = route;
     }

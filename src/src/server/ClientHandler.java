@@ -53,8 +53,18 @@ public class ClientHandler extends Throwable implements Runnable {
     }
 
     public void sendMessage(String responseReturn, String route){
+        sendFakeRequest();
         ResponseWrapper response = new ResponseWrapper("", responseReturn, route);
         System.out.println(clientSocketXXX.isConnected() + "" + clientSocketXXX.getRemoteSocketAddress() + " <-- 200: OK : Send Message {" + responseReturn + "} from " + Thread.currentThread().getName());
+        out.println(gson.toJson(response));
+        out.flush();
+    }
+
+    /**
+     * Fake the first request when creating new thread while the old thread still listening one.
+     */
+    private void sendFakeRequest(){
+        ResponseWrapper response = new ResponseWrapper("", "", "");
         out.println(gson.toJson(response));
         out.flush();
     }
@@ -77,7 +87,7 @@ public class ClientHandler extends Throwable implements Runnable {
                 }
                 String responseReturn = "";
                 String a = request.getRoute();
-
+                String status = "";
                 if (a.equals("/doLogin")) {
                     try {
                         Map<String, Object> data = (Map<String, Object>) request.getData();
@@ -92,14 +102,17 @@ public class ClientHandler extends Throwable implements Runnable {
                             User returnUser = svUC.onLogin(user.getUsername(), user.getPassword());
                             Server.listClientConnection.put(returnUser.getUsername(), this);
                             this.user = returnUser;
+                            status = "true";
                             responseReturn = gson.toJson(returnUser);
 
-                        } else{
-                            responseReturn  = "account is already logged in";
+                        }
+                        else{
+                            status = "false";
+                            responseReturn  = "Your account has been logged in. ";
                         }
 
                     } catch (NumberFormatException e) {
-                        System.out.println("Exception caused" + e.toString());
+                        System.out.println("Exception caused" + e);
                     }
 
                 } else if (a.equals("/doLogout")) {
@@ -141,9 +154,11 @@ public class ClientHandler extends Throwable implements Runnable {
                         if (!isUserExist) {
                             boolean isSuccessCreateAccount = svUC.onSigningUp(user.getFullName(), user.getUsername(), user.getPassword());
                             if (isSuccessCreateAccount) {
-                                responseReturn = "successfully create account";
+                                status = "true";
+                                responseReturn = "Successfully Create Account";
                             } else {
-                                responseReturn = "null";
+                                status = "false";
+                                responseReturn = "Server error";
                             }
                         } else {
                             responseReturn  = "username already exist";
@@ -171,7 +186,6 @@ public class ClientHandler extends Throwable implements Runnable {
                             responseReturn = returnJson.toString();
                             opponentClientHandler.sendMessage(responseReturn, "/beInvited");
                             continue;
-
                         } else {
                             JsonObject returnJson = new JsonObject();
                             returnJson.addProperty("status", false);
@@ -186,14 +200,14 @@ public class ClientHandler extends Throwable implements Runnable {
                 } else if (a.equals("/respondToInvitation")) {
                     try {
                         Map<String, String> data = (Map<String, String>) request.getData();
-                        boolean status = Boolean.parseBoolean(data.get("status"));
+                        boolean statusBoolean = Boolean.parseBoolean(data.get("status"));
                         String userNamePlayWith = data.get("opponent");
-                        
-                        if (status && Server.listClientConnection.containsKey(userNamePlayWith) && !userNamePlayWith.equals(data.get("currUser"))) {
+
+                        if (statusBoolean && Server.listClientConnection.containsKey(userNamePlayWith) && !userNamePlayWith.equals(data.get("currUser"))) {
                             Executors.newFixedThreadPool(4).submit(new GamePlayHandler(this, Server.listClientConnection.get(userNamePlayWith)));
                             continue;
 
-                        } else if (!status) {
+                        } else if (!statusBoolean) {
                             ClientHandler opponentClientHandler = Server.listClientConnection.get(data.get("opponent"));
                             JsonObject returnJson = new JsonObject();
                             returnJson.addProperty("status", String.valueOf(false));
@@ -284,28 +298,24 @@ public class ClientHandler extends Throwable implements Runnable {
                             }
                         }
                     }
-
-                } else if (a.equals("/postAnswer")){
+                } else if(a.equals("/postAnswer")){
                     Map<String, String> data = (Map<String, String>) request.getData();
                     String idQuestion = data.get("id");
                     String userAns = data.get("answer");
                     long timeStamp = Long.parseLong(data.get("timeStamp"));
                     String type = data.get("type");
-                    gameController.receiveAnswer(this, new Answer(idQuestion, userAns, timeStamp, type));
-
+                    gameController.receiveAnswer(this, new Answer(idQuestion,userAns,timeStamp,type));
                 } else if(a.equals("/postScore")){
                     Map<String, Double> data = (Map<String, Double>) request.getData();
                     double point = data.get("score");
-                    gameController.receiveScore(this, point);
-
+                    gameController.receiveScore(this,point);
                 }
-
-                if (responseReturn.isEmpty()) continue;
-                ResponseWrapper response = new ResponseWrapper("", responseReturn, a);
+                sendFakeRequest();
+                if(responseReturn.isEmpty()) continue;
+                ResponseWrapper response = new ResponseWrapper(status, responseReturn, a);
                 System.out.println(clientSocketXXX.isConnected() + "" + clientSocketXXX.getRemoteSocketAddress() + " <-- 200: OK | Send Message: {" + responseReturn + "} from " + Thread.currentThread().getName());
                 out.println(gson.toJson(response));
                 out.flush();
-
             } catch (JsonSyntaxException e) {
                 System.out.println("Fail" + e);
             }

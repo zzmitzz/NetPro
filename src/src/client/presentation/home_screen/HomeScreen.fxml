@@ -1,0 +1,46 @@
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
+
+<!--<?import javafx.scene.control.Button?>-->
+<!--<?import javafx.scene.control.Label?>-->
+<!--<?import javafx.scene.control.TableColumn?>-->
+<!--<?import javafx.scene.control.TableView?>-->
+<!--<?import javafx.scene.control.cell.PropertyValueFactory?>-->
+<!--<?import javafx.scene.image.Image?>-->
+<!--<?import javafx.scene.image.ImageView?>-->
+<!--<?import javafx.scene.layout.BorderPane?>-->
+<!--<?import javafx.scene.layout.HBox?>-->
+<!--<?import javafx.scene.layout.StackPane?>-->
+<!--<?import javafx.scene.layout.VBox?>-->
+
+<!--<BorderPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.client.presentation.home_screen.HomeScreenController">-->
+<!--    &lt;!&ndash; Main background with a textured or steampunk image &ndash;&gt;-->
+<!--    <center>-->
+<!--        <StackPane>-->
+<!--            <ImageView fitHeight="600.0" fitWidth="900.0" preserveRatio="false">-->
+<!--                <image>-->
+<!--                    <Image url="@../../background2.png" />-->
+<!--                </image>-->
+<!--            </ImageView>-->
+<!--            <VBox alignment="CENTER" spacing="20" style="-fx-padding: 30px; -fx-background-color: rgba(0, 0, 0, 0.5); -fx-background-radius: 20px;">-->
+<!--                <HBox alignment="CENTER" style="-fx-padding: 10px;">-->
+<!--                    <Label style="-fx-font-size: 28px; -fx-font-family: 'Georgia'; -fx-text-fill: #FFD700; -fx-effect: dropshadow(gaussian, #000000, 5, 0.5, 0, 0);" text="Select Player" />-->
+<!--                </HBox>-->
+<!--                <TableView fx:id="playerTable" prefHeight="308.0" prefWidth="593.0" style="-fx-background-color: rgba(0, 0, 0, 0.3); -fx-border-color: #8B4513; -fx-border-width: 3px; -fx-border-radius: 10px;">-->
+<!--                    <TableColumn fx:id="nameColumn" prefWidth="250" text="Player Name">-->
+<!--                        <cellValueFactory><PropertyValueFactory property="playerName" /></cellValueFactory>-->
+<!--                    </TableColumn>-->
+<!--                    <TableColumn fx:id="scoreColumn" prefWidth="150" text="Score">-->
+<!--                        <cellValueFactory><PropertyValueFactory property="score" /></cellValueFactory>-->
+<!--                    </TableColumn>-->
+<!--                </TableView>-->
+<!--                <Label fx:id="emptyTableMessage" style="-fx-font-size: 16px; -fx-font-family: 'Georgia'; -fx-text-fill: #FF4500; -fx-visible: false;" text="No data available to display." />-->
+<!--                <HBox alignment="CENTER" spacing="15" style="-fx-padding: 15px;">-->
+<!--                    <Button fx:id="sendInviteButton" style="-fx-background-color: linear-gradient(#556B2F, #3b6e4a); -fx-text-fill: #FFF8DC; -fx-font-size: 14px; -fx-font-family: 'Verdana'; -fx-border-color: #B8860B; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-pref-width: 120; -fx-effect: dropshadow(gaussian, #000000, 4, 0.5, 1, 1);" text="Send Invite" />-->
+<!--                    <Button fx:id="playRandomButton" style="-fx-background-color: linear-gradient(#556B2F, #3b6e4a); -fx-text-fill: #FFF8DC; -fx-font-size: 14px; -fx-font-family: 'Verdana'; -fx-border-color: #B8860B; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-pref-width: 120; -fx-effect: dropshadow(gaussian, #000000, 4, 0.5, 1, 1);" text="Play Random" />-->
+<!--                    <Button fx:id="instructionsButton" onAction="#handleInstructions" style="-fx-background-color: linear-gradient(#556B2F, #3b6e4a); -fx-text-fill: #FFF8DC; -fx-font-size: 14px; -fx-font-family: 'Verdana'; -fx-border-color: #B8860B; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-pref-width: 120; -fx-effect: dropshadow(gaussian, #000000, 4, 0.5, 1, 1);" text="Instructions" />-->
+<!--                    <Button fx:id="logoutButton" onAction="#handleLogout" style="-fx-background-color: linear-gradient(#556B2F, #3b6e4a); -fx-text-fill: #FFF8DC; -fx-font-size: 14px; -fx-font-family: 'Verdana'; -fx-border-color: #B8860B; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-pref-width: 120; -fx-effect: dropshadow(gaussian, #000000, 4, 0.5, 1, 1);" text="Logout" />-->
+<!--                </HBox>-->
+<!--            </VBox>-->
+<!--        </StackPane>-->
+<!--    </center>-->
+<!--</BorderPane>-->

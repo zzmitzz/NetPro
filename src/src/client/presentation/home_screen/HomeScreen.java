@@ -18,7 +18,6 @@ import javax.swing.table.DefaultTableModel;
 import src.client.common.LoadingDialog;
 import src.client.common.NotificationDialog;
 import src.client.data.dto.User;
-import src.client.presentation.login.LoginScreen;
 import src.client.presentation.play_game.CrosswordGameScreen;
 import src.client.presentation.tutorial.TutorialScreen;
 
@@ -40,7 +39,67 @@ public class HomeScreen extends JFrame implements HomeScreenController.onActionR
     private JDialog inviteDialog;
     private JDialog waitingDialog;
     private Timer waitingTimer;
-    
+    SwingWorker<Void, Integer> worker = new SwingWorker<Void, Integer>() {
+        private JLabel timerLabel;
+
+        @Override
+        protected Void doInBackground() {
+            SwingUtilities.invokeLater(this::createAndShowDialog);
+            return null;
+        }
+
+        private void createAndShowDialog() {
+            // Store references at class level
+            waitingDialog = new JDialog(HomeScreen.this, "Đang tìm trận", true);
+            waitingDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            waitingDialog.setLayout(new BorderLayout(10, 10));
+            waitingDialog.setSize(300, 150);
+            waitingDialog.setLocationRelativeTo(HomeScreen.this);
+
+            // Rest of dialog setup remains same
+            JPanel messagePanel = new JPanel();
+            JLabel messageLabel = new JLabel("<html>Đang tìm trận</html>");
+            messagePanel.add(messageLabel);
+            waitingDialog.add(messagePanel, BorderLayout.CENTER);
+
+            timerLabel = new JLabel("0");
+            waitingDialog.add(timerLabel, BorderLayout.NORTH);
+
+            JPanel buttonPanel = new JPanel(new FlowLayout());
+            JButton cancelButton = new JButton("Hủy tìm trận");
+            buttonPanel.add(cancelButton);
+            waitingDialog.add(buttonPanel, BorderLayout.SOUTH);
+
+            // Store timer reference at class level
+            waitingTimer = new Timer(1000, e -> {
+                int currentValue = Integer.parseInt(timerLabel.getText());
+                publish(currentValue + 1);
+            });
+
+            cancelButton.addActionListener(e -> {
+                controller.onCancelFindGame(user.getUsername());
+                cleanup();
+            });
+
+            waitingTimer.start();
+            waitingDialog.setVisible(true);
+        }
+
+        @Override
+        protected void process(List<Integer> chunks) {
+            int lastValue = chunks.get(chunks.size() - 1);
+            timerLabel.setText(String.valueOf(lastValue));
+        }
+
+        private void cleanup() {
+            if (waitingTimer != null) {
+                waitingTimer.stop();
+            }
+            if (waitingDialog != null) {
+                waitingDialog.dispose();
+            }
+        }
+    };
     public HomeScreen(User user) throws IOException {
         this.controller = new HomeScreenController(this);
         setTitle("Chọn người chơi");
@@ -67,7 +126,7 @@ public class HomeScreen extends JFrame implements HomeScreenController.onActionR
             public void windowClosing(WindowEvent e) {
                 System.out.println("Window is closing");
                 // Optional: Show confirmation dialog
-                int confirmed = JOptionPane.showConfirmDialog(null, 
+                int confirmed = JOptionPane.showConfirmDialog(null,
                         "Are you sure you want to exit?", "Exit Confirmation",
                         JOptionPane.YES_NO_OPTION);
 
@@ -171,7 +230,7 @@ public class HomeScreen extends JFrame implements HomeScreenController.onActionR
         data = new Object[listUser.size()][3];
         for (int i = 0; i < listUser.size(); i++) {
             User user = listUser.get(i);
-            data[i][0] = user.getUsername(); 
+            data[i][0] = user.getUsername();
             data[i][1] = user.getFullName();
             data[i][2] = user.getScore();
         }
@@ -210,26 +269,26 @@ public class HomeScreen extends JFrame implements HomeScreenController.onActionR
         inviteDialog.setLayout(new BorderLayout(10, 10));
         inviteDialog.setSize(300, 150);
         inviteDialog.setLocationRelativeTo(this);
-    
+
         // Message panel
         JPanel messagePanel = new JPanel();
         JLabel messageLabel = new JLabel("<html>Người chơi " + opponentUsername + " mời bạn vào trận.<br>Chấp nhận lời mời?</html>");
         messagePanel.add(messageLabel);
         inviteDialog.add(messagePanel, BorderLayout.CENTER);
-    
+
         // Timer label
         JLabel timerLabel = new JLabel("30");
         inviteDialog.add(timerLabel, BorderLayout.NORTH);
-    
+
         // Buttons panel
         JPanel buttonPanel = new JPanel(new FlowLayout());
         JButton acceptButton = new JButton("Có");
         JButton declineButton = new JButton("Không");
-    
+
         buttonPanel.add(acceptButton);
         buttonPanel.add(declineButton);
         inviteDialog.add(buttonPanel, BorderLayout.SOUTH);
-    
+
         // Timer
         Timer timer = new Timer(1000, new ActionListener() {
             int timeLeft = 30;
@@ -244,19 +303,19 @@ public class HomeScreen extends JFrame implements HomeScreenController.onActionR
                 }
             }
         });
-    
+
         acceptButton.addActionListener(e -> {
             timer.stop();
             inviteDialog.dispose();
             controller.respondToInvitation(true,  opponentUsername, user.getUsername());
         });
-    
+
         declineButton.addActionListener(e -> {
             timer.stop();
             inviteDialog.dispose();
             controller.respondToInvitation(false, opponentUsername, user.getUsername());
         });
-    
+
         timer.start();
         inviteDialog.setVisible(true);
     }
@@ -278,88 +337,28 @@ public class HomeScreen extends JFrame implements HomeScreenController.onActionR
 
     @Override
     public void onPlayGameState(boolean status) {
+
         if (status) {
             if (isRandom) {
-                
-            }
 
+            }
             dispose();
             try {
+                // Call the constructor first fuck it.
                 new CrosswordGameScreen(user);
+                worker.cancel(true);
+                System.out.println(controller.getClass().getName());
                 controller.onCloseLiveUpdate(controller.getClass().getName());
-                controller.callbackAction = null;
                 controller = null;
-            } catch (Exception e) {}
+            } catch (Exception e) {
+
+            }
 
         }
     }
 
-    @Override 
+    @Override
     public void onWaitingFindGame() {
-        SwingWorker<Void, Integer> worker = new SwingWorker<Void, Integer>() {
-            private JLabel timerLabel;
-
-            @Override
-            protected Void doInBackground() {
-                SwingUtilities.invokeLater(() -> {
-                    createAndShowDialog();
-                });
-                return null;
-            }
-
-            private void createAndShowDialog() {
-                // Store references at class level
-                waitingDialog = new JDialog(HomeScreen.this, "Đang tìm trận", true);
-                waitingDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                waitingDialog.setLayout(new BorderLayout(10, 10));
-                waitingDialog.setSize(300, 150);
-                waitingDialog.setLocationRelativeTo(HomeScreen.this);
-
-                // Rest of dialog setup remains same
-                JPanel messagePanel = new JPanel();
-                JLabel messageLabel = new JLabel("<html>Đang tìm trận</html>");
-                messagePanel.add(messageLabel);
-                waitingDialog.add(messagePanel, BorderLayout.CENTER);
-
-                timerLabel = new JLabel("0");
-                waitingDialog.add(timerLabel, BorderLayout.NORTH);
-
-                JPanel buttonPanel = new JPanel(new FlowLayout());
-                JButton cancelButton = new JButton("Hủy tìm trận");
-                buttonPanel.add(cancelButton);
-                waitingDialog.add(buttonPanel, BorderLayout.SOUTH);
-
-                // Store timer reference at class level
-                waitingTimer = new Timer(1000, e -> {
-                    int currentValue = Integer.parseInt(timerLabel.getText());
-                    publish(currentValue + 1);
-                });
-
-                cancelButton.addActionListener(e -> {
-                    controller.onCancelFindGame(user.getUsername());
-                    cleanup();
-                });
-
-                waitingTimer.start();
-                waitingDialog.setVisible(true);
-            }
-
-            @Override
-            protected void process(List<Integer> chunks) {
-                int lastValue = chunks.get(chunks.size() - 1);
-                timerLabel.setText(String.valueOf(lastValue));
-            }
-
-            private void cleanup() {
-                if (waitingTimer != null) {
-                    waitingTimer.stop();
-                }
-                if (waitingDialog != null) {
-                    waitingDialog.dispose();
-                }
-            }
-        };
-
         worker.execute();
     }
 
@@ -378,26 +377,26 @@ public class HomeScreen extends JFrame implements HomeScreenController.onActionR
             inviteDialog.setLayout(new BorderLayout(10, 10));
             inviteDialog.setSize(300, 150);
             inviteDialog.setLocationRelativeTo(this);
-        
+
             // Message panel
             JPanel messagePanel = new JPanel();
             JLabel messageLabel = new JLabel("<html>Đã tìm thấy trận<br>Chấp nhận tham gia?</html>");
             messagePanel.add(messageLabel);
             inviteDialog.add(messagePanel, BorderLayout.CENTER);
-        
+
             // Timer label
             JLabel timerLabel = new JLabel("10");
             inviteDialog.add(timerLabel, BorderLayout.NORTH);
-        
+
             // Buttons panel
             JPanel buttonPanel = new JPanel(new FlowLayout());
             JButton acceptButton = new JButton("Có");
             JButton declineButton = new JButton("Không");
-        
+
             buttonPanel.add(acceptButton);
             buttonPanel.add(declineButton);
             inviteDialog.add(buttonPanel, BorderLayout.SOUTH);
-        
+
             // Timer
             Timer timer = new Timer(1000, new ActionListener() {
                 int timeLeft = 10;
@@ -418,13 +417,13 @@ public class HomeScreen extends JFrame implements HomeScreenController.onActionR
                 inviteDialog.dispose();
                 controller.respondToFoundGame(user.getUsername(), true);
             });
-        
+
             declineButton.addActionListener(e -> {
                 timer.stop();
                 inviteDialog.dispose();
                 controller.respondToFoundGame(user.getUsername(), false);
             });
-        
+
             timer.start();
             inviteDialog.setVisible(true);
         });
@@ -438,8 +437,8 @@ public class HomeScreen extends JFrame implements HomeScreenController.onActionR
             inviteDialog = null;
         }
 
-        JOptionPane.showMessageDialog(this, 
-                            "Trận đấu đã bị hủy do đối thủ từ chối!", 
+        JOptionPane.showMessageDialog(this,
+                            "Trận đấu đã bị hủy do đối thủ từ chối!",
                                     "Trận đấu bị hủy",
                                     JOptionPane.INFORMATION_MESSAGE
         );
@@ -447,17 +446,17 @@ public class HomeScreen extends JFrame implements HomeScreenController.onActionR
 
     @Override
     public void onLogout(String status) {
-        controller.onCloseLiveUpdate(controller.getClass().getName());
-        controller.callbackAction = null;
-        controller = null;
-
-        SwingUtilities.invokeLater(() -> {
-            dispose();
-            try {
-                new LoginScreen();
-            } catch (Exception e) {
-                Logger.getLogger(HomeScreen.class.getName()).log(Level.SEVERE, null, e);
-            }
-        });
+//        controller.onCloseLiveUpdate(controller.getClass().getName());
+//        controller.callbackAction = null;
+//        controller = null;
+//
+//        SwingUtilities.invokeLater(() -> {
+//            dispose();
+//            try {
+//                new LoginScreen();
+//            } catch (Exception e) {
+//                Logger.getLogger(HomeScreen.class.getName()).log(Level.SEVERE, null, e);
+//            }
+//        });
     }
 }

@@ -29,7 +29,7 @@ import javax.swing.*;
 /**
  * @author 1
  */
-public class GamePlayHandler<T> implements Runnable {
+public class GamePlayHandler implements Runnable {
     private final ClientHandler player1;
     private final ClientHandler player2;
     //    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);

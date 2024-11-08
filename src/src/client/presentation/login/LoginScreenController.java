@@ -3,24 +3,43 @@ package src.client.presentation.login;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
 import java.io.IOException;
+
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import src.ResponseWrapper;
 import src.client.common.BaseClientController;
 import src.client.common.onAction;
 import src.client.data.dto.User;
+import src.client.presentation.home_screen.HomeScreen;
+import src.client.presentation.home_screen.HomeScreenController;
 import src.client.presentation.login.LoginScreenController.onActionResponse;
 
+import javax.swing.*;
+
 public class LoginScreenController extends BaseClientController {
-    private final onActionResponse listener;
+    @FXML
+    private TextField usr, pwd;
+    @FXML
+    private Button loginBtn;
+    @FXML
+    private Hyperlink registerLink;
 
     public interface onActionResponse {
         void loginCallback(User user);
         void loginCallback(String status);
         void registerCallback();
     }
-
-    public LoginScreenController(onActionResponse action) throws IOException {
-        this.listener = action;
+    public LoginScreenController() throws IOException {
         callbackAction = new onAction() {
             @Override
             public void onSuccess(String data) {
@@ -29,7 +48,7 @@ public class LoginScreenController extends BaseClientController {
                 if(route.equals("/doLogin")) {
                     try {
                         JsonObject jsonObject = JsonParser.parseString(rp.data).getAsJsonObject();
-                        listener.loginCallback(new User(
+                        loadHomeScreen(new User(
                                 jsonObject.get("fullName").getAsString(),
                                 jsonObject.get("username").getAsString(),
                                 jsonObject.get("password").getAsString(),
@@ -37,14 +56,8 @@ public class LoginScreenController extends BaseClientController {
                         ));
                     } catch (Exception e) {
                         String status = rp.data;
-                        listener.loginCallback(status);
+                        loadHomeScreen(status);
                     }
-                } else if (route.equals("/test")) {
-                    System.out.println(data);
-                }
-
-                if(route.equals("/doRegistery")){
-                    // Todo
                 }
             }
 
@@ -56,7 +69,6 @@ public class LoginScreenController extends BaseClientController {
         };
         onStartLiveUpdate(this.getClass().getName());
     }
-    
     public void onLogin(String username, String password) {
         doJsonRequest(
                 new User(
@@ -68,4 +80,66 @@ public class LoginScreenController extends BaseClientController {
                 "/doLogin");
     }
 
+
+    // JAVA FX
+    public void initialize() {}
+
+    public void click_login(ActionEvent e) throws IOException {
+        String username = usr.getText();
+        String password = pwd.getText();
+        if (validateInputs(username, password)) {
+            onLogin(username, password);
+        }
+    }
+
+    private boolean validateInputs(String username, String password) {
+        if (username.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Tên không được để trống.");
+            return false;
+        } else if (username.equals("SERVER") || username.equals("Round")) {
+            JOptionPane.showMessageDialog(null, "Name \"" + username + "\" is not allowed, please change.");
+            usr.setText("");
+            return false;
+        }
+        return true;
+    }
+    private void loadHomeScreen(String a){
+        JOptionPane.showMessageDialog(null, "Tài khoản mật khẩu không tồn tại " + a);
+    }
+    private void loadHomeScreen(User player) {
+        try {
+//            onCloseLiveUpdate(getClass().getName());
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("client/presentation/login/HomeScreen.fxml"));
+//            Parent root = loader.load();
+//            HomeScreenController controller = loader.getController();
+////            controller.setUserData(player);
+//            Stage stage = (Stage) loginBtn.getScene().getWindow();
+//            stage.setScene(new Scene(root));
+//            stage.setTitle("Guessing Word Game");
+//            stage.show();
+
+            new HomeScreen(player);
+            onCloseLiveUpdate(getClass().getName());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void showRegisterForm(ActionEvent ae) {
+        try {
+            onCloseLiveUpdate(getClass().getName());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../signup/RegisterScreen.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) registerLink.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Guessing Word Game");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onExit() {
+        Platform.exit();
+    }
 }

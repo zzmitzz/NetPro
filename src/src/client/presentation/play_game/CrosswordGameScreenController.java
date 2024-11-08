@@ -74,7 +74,10 @@ public class CrosswordGameScreenController extends BaseClientController {
 
             }
         };
-        onStartLiveUpdate(getClass().toString());
-
+        onStartLiveUpdate(getClass().getName());
+    }
+    void closeController(){
+        onCloseLiveUpdate(getClass().getName());
+        callbackAction = null;
     }
 }

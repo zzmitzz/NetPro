@@ -11,7 +11,6 @@ public abstract class BaseClientController {
 
     public final ClientConnection clientConnection = ServiceLocator.initAPI();
     protected final Gson gson = new Gson();
-    private volatile boolean isListening = false;
     public onAction callbackAction = null;
 
     /**
@@ -91,7 +90,6 @@ public abstract class BaseClientController {
      * @param controllerName the name of the controller for which live updates should be closed
      */
     public void onCloseLiveUpdate(String controllerName) {
-        isListening = false;
         clientConnection.closeListening(controllerName);
     }
 }

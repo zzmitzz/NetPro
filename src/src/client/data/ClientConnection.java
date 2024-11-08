@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import src.RequestWrapper;
 import src.client.common.Response;
 import src.client.data.dto.User;
+import src.helper.CancelableReader;
 import src.server.Constant;
 
 public class ClientConnection {
@@ -36,8 +37,8 @@ public class ClientConnection {
     public Socket openConnection() {
         try {
             mySocket = new Socket(serverHost, serverPort);
-            in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
             out = new PrintWriter(mySocket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
             System.out.println(mySocket);
         } catch (IOException ex) {
             System.out.println(ex + getClass().toString());
@@ -65,45 +66,50 @@ public class ClientConnection {
         }
         return;
     }
-
-    public void startListenning(Response callback, String controllerName) {
+    public void startListenning(Response callback, String controllerName) throws IOException {
         Runnable listeningTask = () -> {
             while (isListening && !Thread.currentThread().isInterrupted() ) {
                 String dataRes = null;
                 System.out.println(Thread.currentThread().getName() + " listening");
-
                 try {
                     dataRes = in.readLine();
-                    System.out.println("Data read on: " + Thread.currentThread().getName());
-                    if (dataRes == null) continue;
-                    System.out.println("<-- 200 OK: Receive " + dataRes);
-                } catch (IOException ex) {
-                    Logger.getLogger(ClientConnection.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
-
+                System.out.println("Data read on: " + Thread.currentThread().getName() + "with + " + in.hashCode());
+                if (dataRes == null) {
+                    System.out.println("Thread is gonna be destroyed: " + Thread.currentThread().getName());
+                    Thread.currentThread().stop();
+                    System.out.println(Thread.currentThread().isAlive());
+                    break;
+                }
+                System.out.println("<-- 200 OK: Receive " + dataRes);
                 System.out.println(System.currentTimeMillis());
-                if (dataRes != null && !dataRes.isEmpty()) {
+                if (!dataRes.isEmpty()) {
                     callback.onSuccess(dataRes);
                 }
             }
         };
+
         Future<?> future = executorService.submit(listeningTask);
-        System.out.println("Task " + controllerName);
         taskMap.put(controllerName, future); // Map the task with its name
     }
 
     public void closeListening(String controllerName) {
         try {
-
-            System.out.println("Task " + controllerName);
             Future<?> task = taskMap.get(controllerName);
+            System.out.println("Task " + controllerName +" onDestroy" + (task==null) );
             if (task != null) {
-//                isListening = false;
                 task.cancel(true);
-                System.out.println(controllerName + " canceled");
+                if(task.isCancelled()){
+
+                    System.out.println(controllerName + "@@@@@@@canceled");
+                }else{
+                    System.out.println(controllerName + "failed on canceling");
+                }
                 taskMap.remove(controllerName); // Remove from map
             }
-            System.out.println(Thread.currentThread().getName() + ". Current listening has been stopped.");
+            System.out.println(Thread.currentThread().getName() + ". Task listening has been canceled.");
         } catch (Exception e) {
         }
     }

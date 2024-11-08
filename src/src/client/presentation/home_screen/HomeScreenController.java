@@ -98,7 +98,7 @@ public class HomeScreenController extends BaseClientController {
             }
         };
         System.out.println("Callback init" + Thread.currentThread().getName());
-        onStartLiveUpdate(this.getClass().getName());
+        onStartLiveUpdate(getClass().getName());
 
         // Verify callback was set
         if (!hasValidCallback()) {
@@ -149,5 +149,11 @@ public class HomeScreenController extends BaseClientController {
 
     public void onLogout(User user) {
         doJsonRequest(user, "/doLogout");
+    }
+
+    @Override
+    public void onCloseLiveUpdate(String controllerName) {
+        super.onCloseLiveUpdate(controllerName);
+
     }
 }

@@ -4,6 +4,9 @@
  */
 package src;
 
+//import src.client.ClientApplication;
+import src.server.ServerConnection;
+
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -20,13 +23,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class WelcomeScreen {
-    static interface ScreenCallBack{
-        void onServerClick();
-        void onClientClick();
-    }
-    public void initScreen(ScreenCallBack a) {
+    public JFrame frame ;
+
+    public WelcomeScreen() {
         // Create the frame
-        JFrame frame = new JFrame("Device Type Selection");
+        frame = new JFrame("Device Type Selection");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(300, 120);
 
@@ -54,7 +55,8 @@ public class WelcomeScreen {
             public void actionPerformed(ActionEvent e) {
                 // Handle server selection
                 System.out.println("Server selected");
-                a.onServerClick();
+                frame.dispose();
+                new ServerConnection();
             }
         });
 
@@ -68,7 +70,8 @@ public class WelcomeScreen {
             public void actionPerformed(ActionEvent e) {
                 // Handle client selection
                 System.out.println("Client selected");
-                a.onClientClick();
+                frame.dispose();
+//                new ClientApplication();
             }
         });
 
@@ -78,4 +81,5 @@ public class WelcomeScreen {
         // Set the frame visibility
         frame.setVisible(true);
     }
+
 }

@@ -14,6 +14,7 @@ public class RequestWrapper<T> {
     public String getMessage() {
         return message;
     }
+
     public RequestWrapper(String type, T data, String route){
         this.type = type;
         this.data = data;

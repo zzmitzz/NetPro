@@ -4,7 +4,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import src.client.data.dto.User;
-import src.client.presentation.home_screen.HomeScreen;
+//import src.client.presentation.home_screen.HomeScreen;
 
 public class TutorialScreen {
     private JFrame frame;
@@ -69,7 +69,7 @@ public class TutorialScreen {
         JTextArea tutorialText = new JTextArea();
         tutorialText.setText("Hướng dẫn chơi game\n\n" +
                              "Luật chơi ở đây");
-        
+
         tutorialText.setEditable(false);
         tutorialText.setLineWrap(true);
         tutorialText.setWrapStyleWord(true);

@@ -4,22 +4,16 @@
  */
 package src;
 
+import src.server.ServerConnection;
+
+import javax.swing.*;
+
 /**
  *
  * @author 1
  */
 public class Application {
     public static void main(String[] args) {
-        WelcomeScreen welcomeScreen = new WelcomeScreen();
-        welcomeScreen.initScreen( new WelcomeScreen.ScreenCallBack(){
-            @Override
-            public void onServerClick() {
-                
-            }
-
-            @Override
-            public void onClientClick() {
-            }
-        });
+        SwingUtilities.invokeLater(WelcomeScreen::new);
     }
 }

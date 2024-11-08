@@ -25,12 +25,11 @@ public class CrosswordGameScreen extends JFrame implements CrosswordGameScreenCo
     JTextField questionField;
     JLabel countdownLabel;
     JComboBox<String> directionDropdown;
-    public static void main(String[] args) throws IOException {
-        new CrosswordGameScreen(new User("","","",0));
-    }
+
     public CrosswordGameScreen(User user) throws IOException {
         this.user = user;
 
+        controller = new CrosswordGameScreenController(this);
         // Set up the frame properties
         setTitle("Trò chơi đoán ô chữ");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -153,7 +152,6 @@ public class CrosswordGameScreen extends JFrame implements CrosswordGameScreenCo
         directionDropdown = new JComboBox<>(directions);
         bottomPanel.add(directionDropdown);
 
-        controller = new CrosswordGameScreenController(this);
         // Set frame visibility
         setVisible(true);
     }
@@ -204,10 +202,9 @@ public class CrosswordGameScreen extends JFrame implements CrosswordGameScreenCo
         }else if (stateResult < 0){
             JOptionPane.showMessageDialog(CrosswordGameScreen.this, "Looser");
         }
-        new HomeScreen(user);
-        controller.onCloseLiveUpdate(controller.getClass().getName());
-        controller = null;
         dispose();
+        new HomeScreen(user);
+        controller.closeController();
     }
     @Override
     public void onGameEnd(){
