@@ -26,7 +26,7 @@ public class LoginScreenController extends BaseClientController {
             public void onSuccess(String data) {
                 ResponseWrapper rp = gson.fromJson(JsonParser.parseString(data), ResponseWrapper.class);
                 String route = rp.route;
-                if(route.equals("/doLogin")) {
+                if (route.equals("/doLogin")) {
                     try {
                         JsonObject jsonObject = JsonParser.parseString(rp.data).getAsJsonObject();
                         listener.loginCallback(new User(
