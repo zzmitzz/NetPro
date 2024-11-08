@@ -1,0 +1,71 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Main",
+            "vmArgs": "--module-path C:/Users/datqm/Downloads/openjfx-23.0.1_windows-x64_bin-sdk/javafx-sdk-23.0.1/lib --add-modules javafx.base,javafx.fxml,javafx.media,javafx.swing,javafx.controls,javafx.graphics,javafx.web",
+            "request": "launch",
+            "mainClass": "src.client.Main",
+            "projectName": "NetPro_5837ff0b"
+        },
+        {
+            "type": "java",
+            "name": "LoginScreenControllerFx",
+            "vmArgs": "--module-path C:/Users/datqm/Downloads/openjfx-23.0.1_windows-x64_bin-sdk/javafx-sdk-23.0.1/lib --add-modules javafx.base,javafx.fxml,javafx.media,javafx.swing,javafx.controls,javafx.graphics,javafx.web",
+            "request": "launch",
+            "mainClass": "src.client.presentation.login.LoginScreenControllerFx",
+            "projectName": "NetPro_5837ff0b"
+        },
+        {
+            "type": "java",
+            "name": "LoginScreenController",
+            "vmArgs": "--module-path C:/Users/datqm/Downloads/openjfx-23.0.1_windows-x64_bin-sdk/javafx-sdk-23.0.1/lib --add-modules javafx.base,javafx.fxml,javafx.media,javafx.swing,javafx.controls,javafx.graphics,javafx.web",
+            "request": "launch",
+            "mainClass": "src.client.presentation.login.LoginScreenController",
+            "projectName": "NetPro_5837ff0b"
+        },
+        {
+            "type": "java",
+            "name": "Current File",
+            "vmArgs": "--module-path C:/Users/datqm/Downloads/openjfx-23.0.1_windows-x64_bin-sdk/javafx-sdk-23.0.1/lib --add-modules javafx.base,javafx.fxml,javafx.media,javafx.swing,javafx.controls,javafx.graphics,javafx.web",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "Application",
+            "vmArgs": "--module-path C:/Users/datqm/Downloads/openjfx-23.0.1_windows-x64_bin-sdk/javafx-sdk-23.0.1/lib --add-modules javafx.base,javafx.fxml,javafx.media,javafx.swing,javafx.controls,javafx.graphics,javafx.web",
+            "request": "launch",
+            "mainClass": "src.Application",
+            "projectName": "NetPro_5837ff0b"
+        },
+        {
+            "type": "java",
+            "name": "ClientApplication",
+            "vmArgs": "--module-path C:/Users/datqm/Downloads/openjfx-23.0.1_windows-x64_bin-sdk/javafx-sdk-23.0.1/lib --add-modules javafx.base,javafx.fxml,javafx.media,javafx.swing,javafx.controls,javafx.graphics,javafx.web",
+            "request": "launch",
+            "mainClass": "src.client.ClientApplication",
+            "projectName": "NetPro_5837ff0b"
+        },
+        {
+            "type": "java",
+            "name": "CrosswordGameScreen",
+            "vmArgs": "--module-path C:/Users/datqm/Downloads/openjfx-23.0.1_windows-x64_bin-sdk/javafx-sdk-23.0.1/lib --add-modules javafx.base,javafx.fxml,javafx.media,javafx.swing,javafx.controls,javafx.graphics,javafx.web",
+            "request": "launch",
+            "mainClass": "src.client.presentation.play_game.CrosswordGameScreen",
+            "projectName": "NetPro_5837ff0b"
+        },
+        {
+            "type": "java",
+            "name": "ServerConnection",
+            "vmArgs": "--module-path C:/Users/datqm/Downloads/openjfx-23.0.1_windows-x64_bin-sdk/javafx-sdk-23.0.1/lib --add-modules javafx.base,javafx.fxml,javafx.media,javafx.swing,javafx.controls,javafx.graphics,javafx.web",
+            "request": "launch",
+            "mainClass": "src.server.ServerConnection",
+            "projectName": "NetPro_5837ff0b"
+        }
+    ]
+}

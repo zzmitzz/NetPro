@@ -1,10 +1,4 @@
-
 package src.client.presentation.login;
-
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import java.io.IOException;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -16,30 +10,47 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javax.swing.*;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import src.client.data.dto.User;
 import src.ResponseWrapper;
 import src.client.common.BaseClientController;
 import src.client.common.onAction;
-import src.client.data.dto.User;
 import src.client.presentation.home_screen.HomeScreen;
+// import presentation.UserData;
+import src.client.presentation.home_screen.HomeScreenControllerFx;
 import src.client.presentation.home_screen.HomeScreenController;
-import src.client.presentation.login.LoginScreenController.onActionResponse;
 
-import javax.swing.*;
+public class LoginScreenControllerFx extends BaseClientController {
 
-public class LoginScreenController extends BaseClientController {
     @FXML
     private TextField usr, pwd;
     @FXML
-    private Button loginBtn;
+    private Button loginButton;
     @FXML
     private Hyperlink registerLink;
 
-    public interface onActionResponse {
-        void loginCallback(User user);
-        void loginCallback(String status);
-        void registerCallback();
+    private User user;
+
+    private void loginCallback(User user) {
+        System.out.println("Success");
+        loadHomeScreen();
     }
-    public LoginScreenController() throws IOException {
+
+    public void loginCallback(String status) {
+        if (status.equals("account is already logged in")) {
+            JOptionPane.showMessageDialog(null, "Tài khoản của bạn đang online trên một thiết bị khác.\nVui lòng đăng xuất.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void initialize() throws IOException {
         callbackAction = new onAction() {
             @Override
             public void onSuccess(String data) {
@@ -48,15 +59,15 @@ public class LoginScreenController extends BaseClientController {
                 if (route.equals("/doLogin")) {
                     try {
                         JsonObject jsonObject = JsonParser.parseString(rp.data).getAsJsonObject();
-                        loadHomeScreen(new User(
-                                jsonObject.get("fullName").getAsString(),
-                                jsonObject.get("username").getAsString(),
-                                jsonObject.get("password").getAsString(),
-                                jsonObject.get("score").getAsDouble()
+                        loginCallback(new User(
+                            jsonObject.get("fullName").getAsString(),
+                            jsonObject.get("username").getAsString(),
+                            jsonObject.get("password").getAsString(),
+                            jsonObject.get("score").getAsDouble()
                         ));
                     } catch (Exception e) {
                         String status = rp.data;
-                        loadHomeScreen(status);
+                        loginCallback(status);
                     }
                 }
             }
@@ -69,7 +80,29 @@ public class LoginScreenController extends BaseClientController {
         };
         onStartLiveUpdate(this.getClass().getName());
     }
-    public void onLogin(String username, String password) {
+
+    public void click_login(ActionEvent e) throws IOException {
+        String username = usr.getText();
+        String password = pwd.getText();
+
+        if (validateInputs(username, password)) {
+            onLogin(username, password);
+        }
+    }
+
+    private boolean validateInputs(String username, String password) {
+        if (username.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Name cannot be Empty.");
+            return false;
+        } else if (username.equals("SERVER") || username.equals("Round")) {
+            JOptionPane.showMessageDialog(null, "Name \"" + username + "\" is not allowed, please change.");
+            usr.clear();
+            return false;
+        }
+        return true;
+    }
+
+    public void onLogin(String username, String password) {        
         doJsonRequest(
                 new User(
                         "test",
@@ -80,46 +113,16 @@ public class LoginScreenController extends BaseClientController {
                 "/doLogin");
     }
 
-
-    // JAVA FX
-    public void initialize() {}
-
-    public void click_login(ActionEvent e) throws IOException {
-        String username = usr.getText();
-        String password = pwd.getText();
-        if (validateInputs(username, password)) {
-            onLogin(username, password);
-        }
-    }
-
-    private boolean validateInputs(String username, String password) {
-        if (username.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Tên không được để trống.");
-            return false;
-        } else if (username.equals("SERVER") || username.equals("Round")) {
-            JOptionPane.showMessageDialog(null, "Name \"" + username + "\" is not allowed, please change.");
-            usr.setText("");
-            return false;
-        }
-        return true;
-    }
-    private void loadHomeScreen(String a){
-        JOptionPane.showMessageDialog(null, "Tài khoản mật khẩu không tồn tại " + a);
-    }
-    private void loadHomeScreen(User player) {
+    private void loadHomeScreen() {
         try {
-//            onCloseLiveUpdate(getClass().getName());
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("client/presentation/login/HomeScreen.fxml"));
-//            Parent root = loader.load();
-//            HomeScreenController controller = loader.getController();
-////            controller.setUserData(player);
-//            Stage stage = (Stage) loginBtn.getScene().getWindow();
-//            stage.setScene(new Scene(root));
-//            stage.setTitle("Guessing Word Game");
-//            stage.show();
-
-            new HomeScreen(player);
-            onCloseLiveUpdate(getClass().getName());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("src/src/client/presentation/home_screen/HomeScreen.fxml"));
+            Parent root = loader.load();
+            HomeScreenControllerFx controller = loader.getController();
+            controller.setUserData(user);
+            Stage stage = (Stage) loginButton.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Guessing Word Game");
+            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -127,8 +130,7 @@ public class LoginScreenController extends BaseClientController {
 
     public void showRegisterForm(ActionEvent ae) {
         try {
-            onCloseLiveUpdate(getClass().getName());
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../signup/RegisterScreen.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("src/src/client/presentation/signup/RegisterScreen.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) registerLink.getScene().getWindow();
             stage.setScene(new Scene(root));
