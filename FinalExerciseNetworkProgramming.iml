@@ -14,5 +14,6 @@
     <orderEntry type="module" module-name="javafx.fxml" />
     <orderEntry type="module" module-name="javafx.base" />
     <orderEntry type="library" name="lib" level="application" />
+    <orderEntry type="module" module-name="javafx.swing" />
   </component>
 </module>

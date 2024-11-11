@@ -1,35 +1,53 @@
 package src.client.presentation.home_screen;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
+import javafx.application.Platform;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 import javafx.event.ActionEvent;
+import src.ResponseWrapper;
+import src.client.common.BaseClientController;
+import src.client.common.onAction;
 import src.client.data.dto.User;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Random;
 
-public class HomeScreenControllerFx {
+public class HomeScreenControllerFx extends BaseClientController implements FoundGameDialog.onFoundGameAction,WaitingDialog.DialogAction, InviteDialog.InvitationResponseHandler {
 
     @FXML
     private TableView<Player> playerTable;
 
     @FXML
-    private TableColumn<Player, String> nameColumn;
+    private TableColumn<Player, String> fullname;
 
     @FXML
-    private TableColumn<Player, Integer> scoreColumn;
+    private TableColumn<Player, String> username;
 
     @FXML
-    private Label emptyTableMessage;
-
+    private TableColumn<Player, Integer> score;
+    @FXML
+    private Label userFullName;
     @FXML
     private Button sendInviteButton;
 
@@ -42,34 +60,179 @@ public class HomeScreenControllerFx {
     @FXML
     private Button logoutButton;
 
-    private User userData;
-
+    private User user;
+    private List<User> listUser;
+    private final ObservableList<Player> playerData= FXCollections.observableArrayList();
+    private InviteDialog inviteDialog;
+    private WaitingDialog waitingDialog;
     @FXML
-    public void initialize() {
+    public void initialize() throws IOException {
         // Set up the table columns with their respective property bindings
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("playerName"));
-        scoreColumn.setCellValueFactory(new PropertyValueFactory<>("score"));
+        fullname.setCellValueFactory(new PropertyValueFactory<>("fullname"));
+        username.setCellValueFactory(new PropertyValueFactory<>("username"));
+        score.setCellValueFactory(new PropertyValueFactory<>("score"));
+        playerTable.setItems(playerData);
+        getUserList();
+        callbackAction = new onAction() {
+            @Override
+            public void onSuccess(String data) {
+                ResponseWrapper rp = gson.fromJson(JsonParser.parseString(data), ResponseWrapper.class);
+                String route = rp.route;
+                if (route.equals("/getListUser")) {
+                    List<User> list = gson.fromJson(rp.data, new TypeToken<List<User>>(){}.getType());
+                    onListUserRes(list);
 
-        // Check if the table is empty and display a message if needed
-        playerTable.setPlaceholder(new Label("No data available to display."));
+                } else if (route.equals("/respondToInvitation")) {
+                    JsonObject result = gson.fromJson(rp.data, JsonObject.class);
+                    boolean status = result.get("status").getAsBoolean();
+                    onBeingDeclined();
 
-        // Example data (optional, for testing purposes)
-        playerTable.getItems().addAll(
-                new Player("Alice", 100),
-                new Player("Bob", 120),
-                new Player("Charlie", 90)
-        );
+                } else if (route.equals("/playGameUser")) {
+                    try {
+                        JsonObject result = gson.fromJson(rp.data, JsonObject.class);
+                        boolean status = result.get("status").getAsBoolean();
+                        onPlayGameState(status);
 
-        // Handle button click events
+                    } catch (Exception e) {
+                        System.out.println(e);
+                    }
+
+                } else if (route.equals("/invitePlay")) {
+                    JsonObject result = gson.fromJson(rp.data, JsonObject.class);
+                    boolean status = result.get("status").getAsBoolean();
+                    onBeingOffline();
+
+                } else if (route.equals("/beInvited")) {
+                    JsonObject result = gson.fromJson(rp.data, JsonObject.class);
+                    String opponentUsername = result.get("invitedBy").getAsString();
+                    onBeingInvited(opponentUsername);
+
+                } else if (route.equals("/findGame")) {
+                    JsonObject result = gson.fromJson(rp.data, JsonObject.class);
+                    String message = result.get("message").getAsString();
+                    onWaitingFindGame();
+
+                } else if (route.equals("/beFoundGame")) {
+                    JsonObject result = gson.fromJson(rp.data, JsonObject.class);
+                    String message = result.get("message").getAsString();
+                    onFoundGame();
+
+                } else if (route.equals("/respondOnFoundGame")) {
+                    JsonObject result = gson.fromJson(rp.data, JsonObject.class);
+                    String message = result.get("message").getAsString();
+                    onCancelRandomInvitation();
+
+                } else if (route.equals("/doLogout")) {
+                    String status = rp.data;
+                    onLogout(status);
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+            }
+            @Override
+            public void onFail() {
+            }
+        };
         setupButtonActions();
+        onStartLiveUpdate(this.getClass().getName());
+    }
+
+    private void onPlayGameState(boolean status) throws IOException {
+        if(status){
+            Parent playGameScreen = FXMLLoader.load(getClass().getResource("../play_game/CrossWordGameScreen.fxml"));
+            Scene playGameScene = new Scene(playGameScreen);
+            Stage stage = (Stage) logoutButton.getScene().getWindow();
+            stage.setScene(playGameScene);
+            stage.show();
+            onCloseLiveUpdate(this.getClass().getName());
+        }else{
+            showMessageDialog("404", "Đã có lỗi xảy ra.");
+        }
+    }
+
+    private void onLogout(String status) {
+
+    }
+
+    private void onCancelRandomInvitation() {
+
+    }
+
+    private void onFoundGame() {
+        Platform.runLater(()->{
+            FoundGameDialog.showDialog(
+                    new Stage(),  // owner stage
+                    this,
+                    user.getUsername()// your existing waiting timer
+            );
+        });
+    }
+
+    private void onWaitingFindGame() {
+        Platform.runLater(()->{
+            waitingDialog = new WaitingDialog(
+                    new Stage(),
+                    this,
+                    user
+            );
+            waitingDialog.show();
+        });
+    }
+
+    private void onBeingOffline() {
+        showMessageDialog("Chẹp Chẹp", "Người chơi hiện không online, vui lòng chọn người khác.");
+    }
+
+    private void onBeingInvited(String opponentUsername) {
+        Platform.runLater(()->{
+            inviteDialog = new InviteDialog(
+                    new Stage(),
+                    opponentUsername,
+                    user.getUsername(),
+                    this
+            );
+            inviteDialog.show();
+        });
+    }
+
+    private void onBeingDeclined() {
+        if (inviteDialog != null) {
+            inviteDialog.closeDialog();
+        }
+        showMessageDialog("Lời mời vào trận của bạn đã bị từ chối", "Lời mời vào trận bị từ chối");
+    }
+    private void showMessageDialog(String title, String message){
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information Dialog");
+            alert.setHeaderText(title);
+            alert.setContentText(message);
+            alert.showAndWait();
+        });
+    }
+    private void onListUserRes(List<User> list) {
+        this.listUser = list;
+        listUser.sort((o1, o2) -> {
+            if (o1.score >= o2.score) {
+                return -1;
+            } else {
+                return 1;
+            }
+        });
+        for(User a : listUser){
+            Platform.runLater(() -> playerData.add(new Player(a.getFullName(), a.getUsername(), (int) Math.ceil(a.getScore()))));
+        }
     }
 
     public void setUserData(User userData) {
-        this.userData = userData;
-        System.out.println("UserData set: " + userData.getUsername() + ", Score: " + userData.getScore());
-        // Optionally update UI with userData info if needed
+        this.user = userData;
+        userFullName.setText("Xin chào: " + user.getFullName());
     }
-
+    public void getUserList() {
+        doJsonRequest(null, "/getListUser");
+    }
     private void setupButtonActions() {
         sendInviteButton.setOnAction(event -> handleSendInvite());
         playRandomButton.setOnAction(event -> handlePlayRandom());
@@ -88,34 +251,38 @@ public class HomeScreenControllerFx {
     private void handleSendInvite() {
         Player selectedPlayer = playerTable.getSelectionModel().getSelectedItem();
         if (selectedPlayer != null) {
-            System.out.println("Invitation sent to: " + selectedPlayer.getPlayerName());
-            // Implement logic to send an invitation, potentially using userData
+            if(selectedPlayer.getUsername().equalsIgnoreCase(user.getUsername())){
+                showMessageDialog("Ê nè!!!", "Don't be disorder like this");
+            }
+            else{
+                JsonObject body = new JsonObject();
+                body.addProperty("opponent", selectedPlayer.getUsername());
+                body.addProperty("currUser", user.getUsername());
+                doJsonRequest(body, "/invitePlay");
+            }
         } else {
-            System.out.println("No player selected. Please select a player to send an invitation.");
+            showMessageDialog("Ê nè!!!", "No player selected. Please select a player to send an invitation.");
         }
     }
 
     private void handlePlayRandom() {
-        if (!playerTable.getItems().isEmpty()) {
-            Random random = new Random();
-            int randomIndex = random.nextInt(playerTable.getItems().size());
-            Player randomPlayer = playerTable.getItems().get(randomIndex);
-            System.out.println("Random invitation sent to: " + randomPlayer.getPlayerName());
-            // Implement logic to send a random invitation, potentially using userData
-        } else {
-            System.out.println("No players available to select.");
-        }
+        JsonObject body = new JsonObject();
+        body.addProperty("username", user.getUsername());
+        doJsonRequest(body, "/findGame");
     }
-
+    public void respondToInvitation(boolean status, String oppoUser, String currUser){
+        JsonObject body = new JsonObject();
+        body.addProperty("status", String.valueOf(status));
+        body.addProperty("opponent", oppoUser);
+        body.addProperty("currUser", currUser);
+        doJsonRequest(body, "/respondToInvitation");
+    }
     public void handleInstructions(ActionEvent event) {
         try {
-            // Load the InstructionScreen.fxml file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("src/src/client/presentation/instruction/InstructionScreen.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../tutorial/InstructionScreen.fxml"));
             Parent instructionScreen = loader.load();
-
-            // Set the scene to the InstructionScreen
             Scene instructionScene = new Scene(instructionScreen);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Stage stage = new Stage();
             stage.setScene(instructionScene);
             stage.setTitle("Instructions");
             stage.show();
@@ -123,35 +290,38 @@ public class HomeScreenControllerFx {
             e.printStackTrace();
         }
     }
-
+    public void onLogout(User user) {
+        doJsonRequest(user, "/doLogout");
+    }
     public void handleLogout(ActionEvent event) throws IOException {
-        // Load the LoginScreen.fxml and set it as the current scene
-        Parent loginScreen = FXMLLoader.load(getClass().getResource("src/src/client/presentation/login/LoginScreen.fxml"));
+        onLogout(user);
+        Parent loginScreen = FXMLLoader.load(getClass().getResource("../login/LoginScreen.fxml"));
         Scene loginScene = new Scene(loginScreen);
-
-        // Get the current stage and set the new scene
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(loginScene);
         stage.show();
-
+        onCloseLiveUpdate(this.getClass().getName());
     }
 
-    // Sample Player class for demonstration
-    public static class Player {
-        private final String playerName;
-        private final int score;
+    @Override
+    public void onCancelFindGame(String username) {
+        JsonObject body = new JsonObject();
+        body.addProperty("username", username);
+        body.addProperty("message", "cancel find game");
+        doJsonRequest(body, "/cancelFindGame");
+    }
 
-        public Player(String playerName, int score) {
-            this.playerName = playerName;
-            this.score = score;
-        }
+    @Override
+    public void handleResponse(boolean accepted, String opponent) {
+        respondToInvitation(accepted, opponent, user.getUsername());
+    }
 
-        public String getPlayerName() {
-            return playerName;
-        }
-
-        public int getScore() {
-            return score;
-        }
+    @Override
+    public void respondToFoundGame(String username, boolean accepted) {
+        JsonObject body = new JsonObject();
+        body.addProperty("username", username);
+        body.addProperty("accept", String.valueOf(accepted));
+        doJsonRequest(body, "/respondOnFoundGame");
     }
 }
+

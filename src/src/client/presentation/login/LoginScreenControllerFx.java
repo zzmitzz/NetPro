@@ -16,17 +16,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import src.client.data.dto.User;
 import src.ResponseWrapper;
 import src.client.common.BaseClientController;
 import src.client.common.onAction;
-import src.client.presentation.home_screen.HomeScreen;
-// import presentation.UserData;
 import src.client.presentation.home_screen.HomeScreenControllerFx;
-import src.client.presentation.home_screen.HomeScreenController;
 
 public class LoginScreenControllerFx extends BaseClientController {
 
@@ -39,8 +34,9 @@ public class LoginScreenControllerFx extends BaseClientController {
 
     private User user;
 
-    private void loginCallback(User user) {
+    private void loginCallback(User user) throws IOException {
         System.out.println("Success");
+        this.user = user;
         loadHomeScreen();
     }
 
@@ -59,6 +55,7 @@ public class LoginScreenControllerFx extends BaseClientController {
                 if (route.equals("/doLogin")) {
                     try {
                         JsonObject jsonObject = JsonParser.parseString(rp.data).getAsJsonObject();
+                        System.out.println(rp.data);
                         loginCallback(new User(
                             jsonObject.get("fullName").getAsString(),
                             jsonObject.get("username").getAsString(),
@@ -113,29 +110,37 @@ public class LoginScreenControllerFx extends BaseClientController {
                 "/doLogin");
     }
 
-    private void loadHomeScreen() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("src/src/client/presentation/home_screen/HomeScreen.fxml"));
-            Parent root = loader.load();
-            HomeScreenControllerFx controller = loader.getController();
-            controller.setUserData(user);
-            Stage stage = (Stage) loginButton.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Guessing Word Game");
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void loadHomeScreen() throws IOException {
+        Platform.runLater(() -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("../home_screen/HomeScreen.fxml"));
+                Parent root = loader.load();
+                HomeScreenControllerFx controller = loader.getController();
+                controller.setUserData(user);
+                // Get current stage
+                System.out.println(user.getUsername());
+                Stage stage = (Stage) loginButton.getScene().getWindow();
+
+                // Set the new scene
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        onCloseLiveUpdate(this.getClass().getName());
     }
 
     public void showRegisterForm(ActionEvent ae) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("src/src/client/presentation/signup/RegisterScreen.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../signup/RegisterScreen.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) registerLink.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Guessing Word Game");
             stage.show();
+            onCloseLiveUpdate(this.getClass().getName());
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -1,6 +1,5 @@
-package src.client.presentation.home_screen;
+package src.client.presentation_xml;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
@@ -12,7 +11,7 @@ import src.client.common.onAction;
 import src.client.data.dto.User;
 
 public class HomeScreenController extends BaseClientController {
-    
+
     private final onActionResponseHomeScreen listener;
     public interface onActionResponseHomeScreen {
         void onListUserRes(List<User> listUser);
@@ -111,7 +110,7 @@ public class HomeScreenController extends BaseClientController {
     public void getUserList() {
         doJsonRequest(null, "/getListUser");
     }
-    
+
     public void respondToInvitation(boolean status, String oppoUser, String currUser){
         JsonObject body = new JsonObject();
         body.addProperty("status", String.valueOf(status));

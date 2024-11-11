@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="presentation.end_game.WinnerScreenController">
+    <center>
+        <StackPane prefHeight="600.0" prefWidth="900.0">
+            <VBox alignment="CENTER" prefWidth="850.0" spacing="30.0" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #4c9a61, #60a862, #5dc5a6, #86d9be); -fx-padding: 20;">
+            <Label text="Score" textFill="WHITE">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </Label>
+            <Label text="1000" textFill="#1dff00">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="96.0" />
+               </font>
+            </Label>
+
+                <!-- Winner Announcement -->
+                <Label style="-fx-font-family: 'Sans-serif'; -fx-font-size: 40px; -fx-font-weight: bold; -fx-text-fill: white;" text="WINNER CHICKEN WINNER" wrapText="true" />
+
+                <Label fx:id="winnerName" style="-fx-font-family: 'Sans-serif'; -fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;" text="Winner's Name" wrapText="true" />
+
+                <Label style="-fx-font-family: 'Sans-serif'; -fx-font-size: 20px; -fx-text-fill: white;" text="You are the winner of the game!" wrapText="true" />
+
+                <!-- Buttons for Continue and Log Out -->
+                <HBox alignment="CENTER" spacing="20.0">
+                    <Button fx:id="logoutButton" onAction="#logout" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #d9534f; -fx-border-color: white; -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 30px;" text="Back to home" />
+                </HBox>
+
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane>

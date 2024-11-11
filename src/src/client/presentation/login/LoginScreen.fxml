@@ -14,73 +14,96 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.effect.DropShadow?>
 
 <BorderPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.client.presentation.login.LoginScreenControllerFx">
     <center>
-        <!-- Main container with split screen -->
         <HBox prefHeight="600.0" prefWidth="900.0">
-
-            <!-- Left side with image and overlay text -->
+            <!-- Left side with improved image and overlay -->
             <StackPane prefHeight="600.0" prefWidth="450.0">
                 <ImageView fitHeight="600.0" fitWidth="450.0" preserveRatio="false">
                     <image>
                         <Image url="@../../background1.png" />
                     </image>
+                    <effect>
+                        <DropShadow color="#000000" radius="10" spread="0.1" />
+                    </effect>
                 </ImageView>
-                <VBox alignment="CENTER" prefHeight="600.0" prefWidth="450.0" spacing="20.0" style="-fx-background-color: rgba(0, 0, 0, 0.4);">
-                    <Label text="Welcome to the word guessing game" textFill="white" wrapText="true">
+                <VBox alignment="CENTER" prefHeight="600.0" prefWidth="450.0" spacing="20.0" style="-fx-background-color: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.7));">
+                    <Label text="Welcome to the word guessing game" textFill="white" wrapText="true" style="-fx-font-weight: bold;">
                         <font>
-                            <Font size="28.0" />
+                            <Font name="System Bold" size="32.0" />
                         </font>
+                        <effect>
+                            <DropShadow color="#000000" radius="5" />
+                        </effect>
                         <VBox.margin>
                             <Insets left="50.0" right="50.0" top="150.0" />
                         </VBox.margin>
                     </Label>
-                    <Label style="-fx-font-size: 14px;" text="Your intelligence and reflexes will be tested through each mysterious puzzle!" textFill="white" wrapText="true">
+                    <Label style="-fx-font-size: 16px;" text="Your intelligence and reflexes will be tested through each mysterious puzzle!" textFill="white" wrapText="true">
+                        <effect>
+                            <DropShadow color="#000000" radius="3" />
+                        </effect>
                         <VBox.margin>
-                            <Insets left="50.0" right="50.0" top="10.0" />
+                            <Insets left="50.0" right="50.0" top="20.0" />
                         </VBox.margin>
                     </Label>
-                    <Button style="-fx-background-color: #4a7c59; -fx-text-fill: white; -fx-font-size: 18px; -fx-background-radius: 30px; -fx-padding: 10px 20px;" text="PLAY NOW">
+                    <Button style="-fx-background-color: linear-gradient(to right, #4a7c59, #2e5c3d); -fx-text-fill: white; -fx-font-size: 18px; -fx-background-radius: 30px; -fx-padding: 15px 40px; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 3);" text="PLAY NOW">
                         <VBox.margin>
-                            <Insets top="20.0" />
+                            <Insets top="30.0" />
                         </VBox.margin>
                     </Button>
                 </VBox>
             </StackPane>
 
-            <!-- Right side with darker gradient background and login form -->
+            <!-- Right side with improved login form -->
             <VBox prefHeight="600.0" prefWidth="450.0">
-                <!-- Updated gradient background using darker tones -->
                 <StackPane prefHeight="600.0" prefWidth="450.0">
-                    <Region prefHeight="600.0" prefWidth="450.0" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #2e4a2c, #0f3057);" />
-                    <VBox alignment="CENTER" prefHeight="400.0" prefWidth="300.0" spacing="20.0">
-                        <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Login to play" textFill="white">
+                    <Region prefHeight="600.0" prefWidth="450.0" style="-fx-background-color: linear-gradient(to bottom right, #1a2f3d, #0f1f2b);" />
+                    <VBox alignment="CENTER" prefHeight="400.0" prefWidth="300.0" spacing="25.0" style="-fx-background-color: transparent;">
+                        <Label style="-fx-font-size: 32px; -fx-font-weight: bold;" text="Login to play" textFill="white">
+                            <effect>
+                                <DropShadow color="#000000" radius="5" />
+                            </effect>
                             <VBox.margin>
-                                <Insets top="70.0" />
+                                <Insets top="70.0" bottom="20.0" />
                             </VBox.margin>
                         </Label>
 
-                        <!-- Adjusted TextField dimensions -->
-                        <TextField fx:id="usr" prefHeight="30.0" prefWidth="200.0" promptText="Username" style="-fx-background-radius: 30px; -fx-border-radius: 30px; -fx-border-color: white; -fx-border-width: 2px; -fx-text-fill: white; -fx-background-color: transparent; -fx-padding: 20px;">
+                        <TextField fx:id="usr" prefHeight="40.0" prefWidth="200.0" promptText="Username"
+                                   style="-fx-background-radius: 30px; -fx-border-radius: 30px; -fx-border-color: #4a7c59; -fx-border-width: 2px; -fx-text-fill: white; -fx-prompt-text-fill: #808080; -fx-background-color: rgba(255,255,255,0.05); -fx-padding: 10px 20px; -fx-font-size: 14px;">
                             <VBox.margin>
-                                <Insets left="40.0" right="40.0" top="20.0" />
+                                <Insets left="40.0" right="40.0" />
                             </VBox.margin>
+                            <effect>
+                                <DropShadow color="#000000" radius="5" spread="0.05" />
+                            </effect>
                         </TextField>
 
-                        <PasswordField fx:id="pwd" prefHeight="30.0" prefWidth="200.0" promptText="Password" style="-fx-background-radius: 30px; -fx-border-radius: 30px; -fx-border-color: white; -fx-border-width: 2px; -fx-text-fill: white; -fx-background-color: transparent; -fx-padding: 20px;">
+                        <PasswordField fx:id="pwd" prefHeight="40.0" prefWidth="200.0" promptText="Password"
+                                       style="-fx-background-radius: 30px; -fx-border-radius: 30px; -fx-border-color: #4a7c59; -fx-border-width: 2px; -fx-text-fill: white; -fx-prompt-text-fill: #808080; -fx-background-color: rgba(255,255,255,0.05); -fx-padding: 10px 20px; -fx-font-size: 14px;">
                             <VBox.margin>
-                                <Insets left="40.0" right="40.0" top="20.0" />
+                                <Insets left="40.0" right="40.0" />
                             </VBox.margin>
+                            <effect>
+                                <DropShadow color="#000000" radius="5" spread="0.05" />
+                            </effect>
                         </PasswordField>
 
-                        <Button fx:id="loginButton" onAction="#click_login" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #4a7c59; -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 30px; -fx-padding: 10px 20px;" text="LOGIN">
+                        <Button fx:id="loginButton" onAction="#click_login" prefHeight="45.0" prefWidth="200.0"
+                                style="-fx-background-color: linear-gradient(to right, #4a7c59, #2e5c3d); -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 30px; -fx-padding: 10px 20px; -fx-cursor: hand;" text="LOGIN">
                             <VBox.margin>
-                                <Insets top="30.0" />
+                                <Insets top="20.0" />
                             </VBox.margin>
+                            <effect>
+                                <DropShadow color="#000000" radius="10" spread="0.1" />
+                            </effect>
                         </Button>
 
-                        <Hyperlink fx:id="registerLink" onAction="#showRegisterForm" style="-fx-text-fill: white;" text="Don't have an account? Register here">
+                        <Hyperlink fx:id="registerLink" onAction="#showRegisterForm"
+                                   style="-fx-text-fill: #4a7c59; -fx-font-size: 14px; -fx-underline: false; -fx-border-color: transparent;"
+                                   text="Don't have an account? Register here">
                             <VBox.margin>
                                 <Insets top="20.0" />
                             </VBox.margin>

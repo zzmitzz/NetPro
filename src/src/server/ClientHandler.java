@@ -202,7 +202,6 @@ public class ClientHandler extends Throwable implements Runnable {
                         Map<String, String> data = (Map<String, String>) request.getData();
                         boolean statusBoolean = Boolean.parseBoolean(data.get("status"));
                         String userNamePlayWith = data.get("opponent");
-
                         if (statusBoolean && Server.listClientConnection.containsKey(userNamePlayWith) && !userNamePlayWith.equals(data.get("currUser"))) {
                             Executors.newFixedThreadPool(4).submit(new GamePlayHandler(this, Server.listClientConnection.get(userNamePlayWith)));
                             continue;
