@@ -23,6 +23,7 @@ import src.ResponseWrapper;
 import src.client.common.BaseClientController;
 import src.client.common.onAction;
 import src.client.data.dto.User;
+import src.client.presentation.play_game.CrosswordGameScreenController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -141,10 +142,14 @@ public class HomeScreenControllerFx extends BaseClientController implements Foun
 
     private void onPlayGameState(boolean status) throws IOException {
         if(status){
-            Parent playGameScreen = FXMLLoader.load(getClass().getResource("../play_game/CrossWordGameScreen.fxml"));
-            Scene playGameScene = new Scene(playGameScreen);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../play_game/CrossWordGameScreen.fxml"));
+            Parent root = loader.load();
+            HomeScreenControllerFx controller = loader.getController();
+            controller.setUserData(user);
+            System.out.println(user.getUsername());
             Stage stage = (Stage) logoutButton.getScene().getWindow();
-            stage.setScene(playGameScene);
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
             stage.show();
             onCloseLiveUpdate(this.getClass().getName());
         }else{
