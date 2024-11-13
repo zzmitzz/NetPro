@@ -103,7 +103,7 @@ public class CrossWordGameScreenController extends BaseClientController {
             direction.getItems().addAll("Cột ngang", "Cột dọc");
         }
         confirmButton.setOnAction(this::handleConfirm);
-
+        loadQuestions();
         highlightColumn();
         displayQuestion();
     }

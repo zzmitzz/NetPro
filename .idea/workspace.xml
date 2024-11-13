@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6baf8661-b4b7-4b52-9a4d-d0d851a05a8d" name="Changes" comment="Hehe">
+    <list default="true" id="6baf8661-b4b7-4b52-9a4d-d0d851a05a8d" name="Changes" comment="Update Nov.13.9:24">
       <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/Application.class" beforeDir="false" />
@@ -39,17 +39,8 @@
       <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/server/usecase/GamePlayHandler.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/server/usecase/ServerUsecase.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/FinalExerciseNetworkProgramming/src/server/usecase/onActionServer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/src/client/presentation/home_screen/FoundGameDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/client/presentation/home_screen/FoundGameDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/src/client/presentation/home_screen/HomeScreenControllerFx.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/client/presentation/home_screen/HomeScreenControllerFx.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/src/client/presentation/home_screen/WaitingDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/client/presentation/home_screen/WaitingDialog.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/src/client/presentation/play_game/CrossWordGameScreen.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/client/presentation/play_game/CrossWordGameScreen.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/src/client/presentation/play_game/CrosswordGameScreenController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/client/presentation/play_game/CrossWordGameScreenController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/src/client/presentation/play_game/styles.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/src/server/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/server/ClientHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/src/server/database_connection/ServerDBConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/server/database_connection/ServerDBConnection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/src/server/usecase/GamePlayHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/server/usecase/GamePlayHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/src/server/usecase/ServerUsecase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/server/usecase/ServerUsecase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/src/server/usecase/onActionServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/server/usecase/onActionServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/src/client/presentation/play_game/CrossWordGameScreenController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/client/presentation/play_game/CrossWordGameScreenController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,28 +84,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Application.Application.executor": "Run",
-    "Application.Application4234.executor": "Run",
-    "Application.ClientApplication.executor": "Run",
-    "Application.Main.executor": "Run",
-    "Application.MainApp.executor": "Run",
-    "Application.RegisterScreen.executor": "Debug",
-    "Application.ServerConnection.executor": "Run",
-    "Application.ServerDBConnection.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/1/Desktop/Sem1_4/LTM-PTIT-main/FinalExerciseNetworkProgramming/src/src/client/presentation/play_game",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15332031",
-    "project.structure.side.proportion": "0.24249423",
-    "settings.editor.selected.configurable": "preferences.JavaFX"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Application.Application.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Application4234.executor&quot;: &quot;Run&quot;,
+    &quot;Application.ClientApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Application.MainApp.executor&quot;: &quot;Run&quot;,
+    &quot;Application.RegisterScreen.executor&quot;: &quot;Debug&quot;,
+    &quot;Application.ServerConnection.executor&quot;: &quot;Run&quot;,
+    &quot;Application.ServerDBConnection.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/1/Desktop/Sem1_4/LTM-PTIT-main/FinalExerciseNetworkProgramming/src/src/client/presentation/play_game&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15332031&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.24249423&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.JavaFX&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\1\Desktop\Sem1_4\LTM-PTIT-main\FinalExerciseNetworkProgramming\src\src\client\presentation\play_game" />
@@ -129,7 +120,7 @@
       <recent name="C:\Users\1\Desktop\Sem1_4\LTM-PTIT-main\FinalExerciseNetworkProgramming\src\src" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.MainApp">
+  <component name="RunManager" selected="Application.ServerConnection">
     <configuration name="ClientApplication" type="Application" factoryName="Application" singleton="false" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="src.client.ClientApplication" />
       <module name="FinalExerciseNetworkProgramming" />
@@ -206,9 +197,9 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.ServerConnection" />
         <item itemvalue="Application.MainApp" />
         <item itemvalue="Application.ServerDBConnection" />
-        <item itemvalue="Application.ServerConnection" />
         <item itemvalue="Application.Main" />
         <item itemvalue="Application.ClientApplication" />
       </list>
@@ -247,7 +238,15 @@
       <option name="project" value="LOCAL" />
       <updated>1731349223287</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Update Nov.13.9:24">
+      <option name="closed" value="true" />
+      <created>1731464703997</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1731464703997</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -264,6 +263,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Merge remote-tracking branch 'origin/dat-branch'&#10;&#10;# Conflicts:&#10;#&#9;src/src/client/presentation/home_screen/HomeScreen.fxml&#10;#&#9;src/src/client/presentation/login/LoginScreen.fxml" />
     <MESSAGE value="Hehe" />
-    <option name="LAST_COMMIT_MESSAGE" value="Hehe" />
+    <MESSAGE value="Update Nov.13.9:24" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update Nov.13.9:24" />
   </component>
 </project>
