@@ -203,7 +203,7 @@ public class ClientHandler extends Throwable implements Runnable {
                         boolean statusBoolean = Boolean.parseBoolean(data.get("status"));
                         String userNamePlayWith = data.get("opponent");
                         if (statusBoolean && Server.listClientConnection.containsKey(userNamePlayWith) && !userNamePlayWith.equals(data.get("currUser"))) {
-                            Executors.newFixedThreadPool(4).submit(new GamePlayHandler(this, Server.listClientConnection.get(userNamePlayWith)));
+                            Executors.newFixedThreadPool(4).submit(new GamePlayHandler(this, Server.listClientConnection.get(userNamePlayWith), svUC));
                             continue;
 
                         } else if (!statusBoolean) {
@@ -282,7 +282,7 @@ public class ClientHandler extends Throwable implements Runnable {
                                 
                                 Server.pairOfUsers.clear();
 
-                                Executors.newFixedThreadPool(4).submit(new GamePlayHandler(player1, player2));
+                                Executors.newFixedThreadPool(4).submit(new GamePlayHandler(player1, player2, svUC));
                                 continue;
 
                             } else {

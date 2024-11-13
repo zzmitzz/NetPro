@@ -6,6 +6,7 @@ package src.server.usecase;
 
 import java.util.List;
 import src.client.data.dto.User;
+import src.model.Question;
 import src.server.database_connection.ServerDBConnection;
 
 public class ServerUsecase implements onActionServer {
@@ -24,5 +25,15 @@ public class ServerUsecase implements onActionServer {
     @Override
     public List<User> getListUser() {
         return serverDBConnection.getAllUser();
+    }
+
+    @Override
+    public List<Question> getQuestionByPack(int packOrder) {
+        return serverDBConnection.getQuestions(packOrder);
+    }
+
+    @Override
+    public void updateUserScore(String username, double scoreBonus) {
+        // TO DO
     }
 }

@@ -9,7 +9,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
+import java.util.List;
+
 import src.client.data.dto.User;
+import src.model.Question;
 import src.server.Constant;
 
 public class ServerDBConnection implements DBAction{
@@ -97,5 +100,33 @@ public class ServerDBConnection implements DBAction{
         } 
 
         return false;  
+    }
+
+    public ArrayList<Question> getQuestions(int packOrder) {
+        ArrayList<Question> result =  new ArrayList<Question>();
+        String query = "Select * FROM quiz Where packOrder = ?";
+        try(PreparedStatement stmt = con.prepareStatement(query)) {
+            stmt.setInt(1, packOrder);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()){
+                int id = rs.getInt("ID"); // Assuming you have an id column
+                String question = rs.getString("Question");
+                String answer = rs.getString("Answer");
+                int firstIndex = rs.getInt("FirstIndex");
+                Question q = new Question(question,answer,firstIndex);
+                result.add(q);
+            }
+            return result;
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return result;
+    }
+    public static void main(String[] args) {
+        ServerDBConnection a = new ServerDBConnection();
+        List<Question> tmp = a.getQuestions(1);
+        for(Question it : tmp){
+            System.out.println(it.ques);
+        }
     }
 }

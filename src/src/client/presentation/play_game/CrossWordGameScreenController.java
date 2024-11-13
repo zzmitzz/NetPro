@@ -1,5 +1,7 @@
 package src.client.presentation.play_game;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -14,12 +16,15 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import src.ResponseWrapper;
+import src.client.common.BaseClientController;
+import src.client.common.onAction;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CrosswordGameScreenController {
+public class CrossWordGameScreenController extends BaseClientController {
 
     @FXML
     private TextField playerName;
@@ -48,35 +53,60 @@ public class CrosswordGameScreenController {
     private Timeline countdown;
 
     private List<QuestionData> questions = new ArrayList<>();
-    private int verticalAnswerIndex = 6;
+
     @FXML
-    public void initialize() {
+    public void initialize() throws IOException {
+        callbackAction = new onAction() {
+            @Override
+            public void onSuccess(String data) throws IOException {
+
+                ResponseWrapper rp = gson.fromJson(JsonParser.parseString(data), ResponseWrapper.class);
+                String route = rp.route;
+                if (route.equals("/postQuestion")) {
+                    JsonObject parseData = gson.fromJson(rp.data, JsonObject.class);
+//                    onReceiveQuestion(parseData.get("id").getAsInt(), parseData.get("question").getAsString());
+                }
+                if (route.equals("/onGameFinish")) {
+//                    onEndGame(gson.fromJson(rp.data, JsonObject.class).get("status").getAsDouble());
+                }
+                if (route.equals("/onAnswerReceive")) {
+                    JsonObject jsonObject = JsonParser.parseString(rp.data).getAsJsonObject();
+                    boolean status = jsonObject.get("status").getAsBoolean();
+                    double point = jsonObject.get("point").getAsDouble();
+//                    onAnswerResult(point, status);
+                }
+                if (route.equals("/onCountdown")) {
+                    JsonObject parseData = gson.fromJson(rp.data, JsonObject.class);
+//                    onCountDownTime(parseData.get("timeLeft").getAsInt());
+                }
+                if (route.equals("/endGame")) {
+//                    onGameEnd();
+                }
+            }
+
+            @Override
+            public void onFail() {
+
+            }
+
+            @Override
+            public void onError(String error) {
+
+            }
+        };
+        onStartLiveUpdate(getClass().getName());
+        initView();
+    }
+
+    private void initView(){
         if (direction != null && direction.getItems().isEmpty()) {
             direction.getItems().addAll("Cột ngang", "Cột dọc");
         }
-
         confirmButton.setOnAction(this::handleConfirm);
-
-        // Load questions
-        loadQuestions();
-
-        // Initialize and start the countdown timer
-        countdown = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-            int currentTime = Integer.parseInt(timerLabel.getText());
-            if (currentTime > 0) {
-                timerLabel.setText(String.valueOf(currentTime - 1));
-            } else {
-                handleTimeout(); // Auto-confirm when time runs out
-            }
-        }));
-        countdown.setCycleCount(Timeline.INDEFINITE);
 
         highlightColumn();
         displayQuestion();
-//        resetTimer();
     }
-
-
     public void loadQuestions() {
         questions.add(new QuestionData("Hai số đối nhau có giá trị tuyệt đối … ?", "bangnhau", 1));
         questions.add(new QuestionData("Ở Hà Nội, phố nào nối phố Đồng Xuân và phố Hàng Ngang, nổi tiếng với ô mai?", "hangluoc", 0));
@@ -91,21 +121,17 @@ public class CrosswordGameScreenController {
 
     }
 
+    /**
+     * Init View for each question
+     */
     private void displayQuestion() {
         // Lấy câu hỏi hiện tại và hiển thị
         QuestionData currentQuestion = questions.get(currentRound);
         question.setText(currentQuestion.getQuestion());
         startSquare = currentQuestion.getStartSquare();
         correctAnswer = currentQuestion.getAnswer();
-
-        // Reset lại inputWord
         inputWord.clear();
-//        System.out.println("startSquare " + startSquare);
-//        System.out.println("correctAnswer " + correctAnswer.length());
-//        System.out.println("currentRound " + currentRound);
-        // Ẩn các ô trước đó và hiển thị ô cho câu trả lời hiện tại
         hideSquares(startSquare, correctAnswer.length());
-        resetTimer();
     }
 
     private void hideSquares(int startSquare, int length) {
@@ -130,7 +156,7 @@ public class CrosswordGameScreenController {
             currentScore += 10;
             score.setText(String.valueOf(currentScore));
 
-            displayAnswerInSquares(); // Display correct answer in squares
+            displayAnswerInSquares();
 
             if (currentRound < questions.size() - 1) {
                 currentRound++;
@@ -152,34 +178,14 @@ public class CrosswordGameScreenController {
         for (int i = 0; i < correctAnswer.length() ; i++) {
 
             Label label = (Label) gameGrid.getChildren().get(startSquare + i + gameGrid.getColumnCount()*currentRound);
-//            System.out.println(startSquare + i + gameGrid.getColumnCount()*1 );
             label.setText(String.valueOf(correctAnswer.charAt(i)));
-//            label.setStyle("-fx-background-color: #4CAF50; -fx-border-color: black; -fx-pref-width: 40; -fx-pref-height: 40;");
-
         }
-    }
-
-
-    private void resetTimer() {
-        if (countdown != null) {
-            countdown.stop();
-        }
-        timerLabel.setText("20");
-        countdown.playFromStart();
     }
 
     private void endGame(boolean isWin) {
         if (countdown != null) {
             countdown.stop();
         }
-//        if (isWin || currentScore == 100) {
-//            System.out.println("Chuyển sang màn hình chiến thắng!");
-//            // Chuyển sang màn hình WinnerScreen.fxml
-//
-//        } else {
-//            System.out.println("Chuyển sang màn hình thua cuộc.");
-//            // Chuyển sang màn hình LoserScreen.fxml
-//        }
         String fxmlFile = isWin || currentScore == 100 ? "/presentation/end_game/WinnerScreen.fxml" : "/presentation/end_game/LoserScreen.fxml";
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
@@ -207,28 +213,11 @@ public class CrosswordGameScreenController {
         label.setVisible(false);
     }
 
-//    private void showSquare(int square) {
-//        Label label = (Label) gameGrid.getChildren().get(square);
-//        label.setStyle("-fx-background-color: #4CAF50; -fx-border-color: black; -fx-pref-width: 40; -fx-pref-height: 40;");
-//    }
-
     private void highlightColumn() {
         for (int i = 0; i < gameGrid.getRowCount(); i++) {
+            int verticalAnswerIndex = 6;
             Label label = (Label) gameGrid.getChildren().get(i * gameGrid.getColumnCount() + verticalAnswerIndex);
-//            label.setStyle("-fx-background-color: yellow; -fx-border-color: black; -fx-pref-width: 40; -fx-pref-height: 40;");
             label.setStyle("-fx-background-color: #64B5F6; -fx-border-color: black; -fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: white; -fx-pref-width: 40; -fx-pref-height: 40;");
-        }
-    }
-
-    private void handleTimeout() {
-        displayAnswerInSquares();
-        // Chuyển câu hỏi khi hết giờ
-        if (currentRound < questions.size() - 1) {
-            currentRound++;
-            round.setText(String.valueOf(currentRound + 1));
-            displayQuestion();
-        } else {
-            endGame(false); // Kết thúc trò chơi nếu hết câu hỏi
         }
     }
 

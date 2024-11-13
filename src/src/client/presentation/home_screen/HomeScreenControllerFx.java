@@ -23,12 +23,13 @@ import src.ResponseWrapper;
 import src.client.common.BaseClientController;
 import src.client.common.onAction;
 import src.client.data.dto.User;
-import src.client.presentation.play_game.CrosswordGameScreenController;
+import src.client.presentation.play_game.CrossWordGameScreenController;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -66,6 +67,7 @@ public class HomeScreenControllerFx extends BaseClientController implements Foun
     private final ObservableList<Player> playerData= FXCollections.observableArrayList();
     private InviteDialog inviteDialog;
     private WaitingDialog waitingDialog;
+    private FoundGameDialog foundgameDialog;
     @FXML
     public void initialize() throws IOException {
         // Set up the table columns with their respective property bindings
@@ -84,8 +86,6 @@ public class HomeScreenControllerFx extends BaseClientController implements Foun
                     onListUserRes(list);
 
                 } else if (route.equals("/respondToInvitation")) {
-                    JsonObject result = gson.fromJson(rp.data, JsonObject.class);
-                    boolean status = result.get("status").getAsBoolean();
                     onBeingDeclined();
 
                 } else if (route.equals("/playGameUser")) {
@@ -99,8 +99,6 @@ public class HomeScreenControllerFx extends BaseClientController implements Foun
                     }
 
                 } else if (route.equals("/invitePlay")) {
-                    JsonObject result = gson.fromJson(rp.data, JsonObject.class);
-                    boolean status = result.get("status").getAsBoolean();
                     onBeingOffline();
 
                 } else if (route.equals("/beInvited")) {
@@ -109,18 +107,12 @@ public class HomeScreenControllerFx extends BaseClientController implements Foun
                     onBeingInvited(opponentUsername);
 
                 } else if (route.equals("/findGame")) {
-                    JsonObject result = gson.fromJson(rp.data, JsonObject.class);
-                    String message = result.get("message").getAsString();
                     onWaitingFindGame();
 
                 } else if (route.equals("/beFoundGame")) {
-                    JsonObject result = gson.fromJson(rp.data, JsonObject.class);
-                    String message = result.get("message").getAsString();
                     onFoundGame();
 
                 } else if (route.equals("/respondOnFoundGame")) {
-                    JsonObject result = gson.fromJson(rp.data, JsonObject.class);
-                    String message = result.get("message").getAsString();
                     onCancelRandomInvitation();
 
                 } else if (route.equals("/doLogout")) {
@@ -142,19 +134,67 @@ public class HomeScreenControllerFx extends BaseClientController implements Foun
 
     private void onPlayGameState(boolean status) throws IOException {
         if(status){
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../play_game/CrossWordGameScreen.fxml"));
-            Parent root = loader.load();
-            HomeScreenControllerFx controller = loader.getController();
-            controller.setUserData(user);
-            System.out.println(user.getUsername());
-            Stage stage = (Stage) logoutButton.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
-            onCloseLiveUpdate(this.getClass().getName());
+            Platform.runLater(()->{
+                try {
+                    // Get absolute path to resource
+                    String fxmlPath = "../play_game/CrossWordGameScreen.fxml";
+                    URL resourceUrl = getClass().getResource(fxmlPath);
+
+                    if (resourceUrl == null) {
+                        System.err.println("Cannot find FXML file at: " + fxmlPath);
+                        showMessageDialog("Error", "Cannot load game screen resource");
+                        return;
+                    }
+
+                    FXMLLoader loader = new FXMLLoader(resourceUrl);
+                    Parent root = loader.load();
+
+                    if (root == null) {
+                        System.err.println("Failed to load FXML root");
+                        showMessageDialog("Error", "Failed to load game screen");
+                        return;
+                    }
+
+                    CrossWordGameScreenController controller = loader.getController();
+                    if (controller == null) {
+                        System.err.println("Failed to get controller");
+                        showMessageDialog("Error", "Failed to initialize game controller");
+                        return;
+                    }
+
+//                    controller.setUserData(user);
+
+                    Scene playScene = new Scene(root);
+                    Stage stage = new Stage();
+                    stage.setScene(playScene);
+                    stage.setTitle("Play Game");
+
+                    // Set minimum size based on your layout
+                    stage.setMinWidth(900);  // Match BorderPane prefWidth
+                    stage.setMinHeight(600); // Match BorderPane prefHeight
+
+                    // Add stage close handler
+                    stage.setOnCloseRequest(event -> {
+                        System.out.println("Game window closing");
+                        // Add any cleanup code here
+                    });
+
+                    stage.show();
+
+                    // Verify window is visible
+                    System.out.println("Game window shown - Width: " + stage.getWidth()
+                            + ", Height: " + stage.getHeight());
+
+                } catch (Exception e) {
+                    System.err.println("Error loading game screen: " + e.getMessage());
+                    e.printStackTrace();
+                    showMessageDialog("Error", "Failed to start game: " + e.getMessage());
+                }
+            });
         }else{
             showMessageDialog("404", "Đã có lỗi xảy ra.");
         }
+        onCloseLiveUpdate(this.getClass().getName());
     }
 
     private void onLogout(String status) {
@@ -166,8 +206,15 @@ public class HomeScreenControllerFx extends BaseClientController implements Foun
     }
 
     private void onFoundGame() {
+        if(waitingDialog != null){
+            try{
+                Platform.runLater(() -> waitingDialog.dialogStage.close());
+            }catch (Exception e){
+
+            }
+        }
         Platform.runLater(()->{
-            FoundGameDialog.showDialog(
+            foundgameDialog = new FoundGameDialog(
                     new Stage(),  // owner stage
                     this,
                     user.getUsername()// your existing waiting timer

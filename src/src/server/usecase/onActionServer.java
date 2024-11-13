@@ -6,6 +6,7 @@ package src.server.usecase;
 
 import java.util.List;
 import src.client.data.dto.User;
+import src.model.Question;
 
 /**
  *
@@ -15,4 +16,7 @@ public interface onActionServer {
     public User onLogin(String username, String password) ;
     public boolean onSigningUp(String fullname, String username, String password);
     public List<User> getListUser();
+    List<Question> getQuestionByPack(int packOrder);
+    void updateUserScore(String username, double scoreBonus);
+//    void
 }

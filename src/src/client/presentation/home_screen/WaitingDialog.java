@@ -95,7 +95,7 @@ public class WaitingDialog {
         timeline.play();
     }
 
-    private void cleanup() {
+    public void cleanup() {
         if (timeline != null) {
             timeline.stop();
         }

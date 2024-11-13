@@ -61,6 +61,7 @@ public class FoundGameDialog extends Stage {
         // Set up timer
         timer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             timeLeft--;
+            System.out.println(timeLeft);
             timerLabel.setText(String.valueOf(timeLeft));
             if (timeLeft <= 0) {
                 handleResponse(false);
@@ -88,6 +89,7 @@ public class FoundGameDialog extends Stage {
                 timer.stop();
             }
         });
+        show();
     }
 
     private void handleResponse(boolean accepted) {
@@ -105,14 +107,7 @@ public class FoundGameDialog extends Stage {
         }
     }
 
-    // Method to show dialog and handle waiting dialog cleanup
-    public static void showDialog(Stage owner, onFoundGameAction controller, String username) {
-        Platform.runLater(() -> {
-            // Show new found game dialog
-            FoundGameDialog dialog = new FoundGameDialog(owner, controller, username);
-            dialog.show();
-        });
-    }
+
 
     public interface onFoundGameAction{
         void respondToFoundGame(String username, boolean accepted);
