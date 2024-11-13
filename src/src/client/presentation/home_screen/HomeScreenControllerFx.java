@@ -162,10 +162,10 @@ public class HomeScreenControllerFx extends BaseClientController implements Foun
                         return;
                     }
 
-//                    controller.setUserData(user);
+                    controller.setUserData(user);
 
                     Scene playScene = new Scene(root);
-                    Stage stage = new Stage();
+                    Stage stage = (Stage) logoutButton.getScene().getWindow();;
                     stage.setScene(playScene);
                     stage.setTitle("Play Game");
 
@@ -347,11 +347,17 @@ public class HomeScreenControllerFx extends BaseClientController implements Foun
     }
     public void handleLogout(ActionEvent event) throws IOException {
         onLogout(user);
-        Parent loginScreen = FXMLLoader.load(getClass().getResource("../login/LoginScreen.fxml"));
-        Scene loginScene = new Scene(loginScreen);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(loginScene);
-        stage.show();
+        Platform.runLater(() -> {
+            try{
+                Parent loginScreen = FXMLLoader.load(getClass().getResource("../login/LoginScreen.fxml"));
+                Scene loginScene = new Scene(loginScreen);
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                stage.setScene(loginScene);
+                stage.show();
+            }catch (Exception e){
+
+            }
+        });
         onCloseLiveUpdate(this.getClass().getName());
     }
 

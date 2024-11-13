@@ -4,21 +4,22 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import src.ResponseWrapper;
 import src.client.common.BaseClientController;
 import src.client.common.onAction;
+import src.client.data.dto.User;
+import src.client.presentation.home_screen.HomeScreenControllerFx;
+import src.model.Question;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ import java.util.List;
 public class CrossWordGameScreenController extends BaseClientController {
 
     @FXML
-    private TextField playerName;
+    private Label playerName;
     @FXML
     private Label score;
     @FXML
@@ -42,7 +43,7 @@ public class CrossWordGameScreenController extends BaseClientController {
     private Button confirmButton;
     @FXML
     private Label timerLabel;
-
+    private int currentQuestionID;
     @FXML
     private GridPane gameGrid;
 
@@ -51,9 +52,9 @@ public class CrossWordGameScreenController extends BaseClientController {
     private int startSquare;
     private String correctAnswer;
     private Timeline countdown;
-
+    private User user;
     private List<QuestionData> questions = new ArrayList<>();
-
+    private double points = 0;
     @FXML
     public void initialize() throws IOException {
         callbackAction = new onAction() {
@@ -64,23 +65,35 @@ public class CrossWordGameScreenController extends BaseClientController {
                 String route = rp.route;
                 if (route.equals("/postQuestion")) {
                     JsonObject parseData = gson.fromJson(rp.data, JsonObject.class);
-//                    onReceiveQuestion(parseData.get("id").getAsInt(), parseData.get("question").getAsString());
+
+                    String ques = parseData.get("question").getAsString();
+                    String ans = parseData.get("answer").getAsString();
+                    int firstIndex = parseData.get("startChar").getAsInt();
+                    Question newQuestion = new Question(ques,ans,firstIndex);
+                    onReceiveQuestion(newQuestion);
                 }
                 if (route.equals("/onGameFinish")) {
-//                    onEndGame(gson.fromJson(rp.data, JsonObject.class).get("status").getAsDouble());
+                    onEndGame(gson.fromJson(rp.data, JsonObject.class).get("status").getAsDouble());
                 }
                 if (route.equals("/onAnswerReceive")) {
                     JsonObject jsonObject = JsonParser.parseString(rp.data).getAsJsonObject();
                     boolean status = jsonObject.get("status").getAsBoolean();
                     double point = jsonObject.get("point").getAsDouble();
-//                    onAnswerResult(point, status);
+                    String answer;
+                    try {
+                        answer = jsonObject.get("answer").getAsString();
+                    }catch (Exception e){
+                        answer = "";
+                    }
+                    String type = jsonObject.get("type").getAsString();
+                    onAnswerResult(point, status, answer, type);
                 }
                 if (route.equals("/onCountdown")) {
                     JsonObject parseData = gson.fromJson(rp.data, JsonObject.class);
-//                    onCountDownTime(parseData.get("timeLeft").getAsInt());
+                    onCountDownTime(parseData.get("timeLeft").getAsInt());
                 }
                 if (route.equals("/endGame")) {
-//                    onGameEnd();
+                    onGameEnd();
                 }
             }
 
@@ -98,49 +111,115 @@ public class CrossWordGameScreenController extends BaseClientController {
         initView();
     }
 
+    private void onEndGame(double status) {
+        if (status == 0) {
+            showMessageDialog("Kết quả nè", "Hoà rùi!");
+        } else if (status > 0.0) {
+            showMessageDialog("Kết quả nè", "Winner");
+        } else if (status < 0) {
+            showMessageDialog("Kết quả nè", "Looser");
+        }
+        Platform.runLater(() -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("../home_screen/HomeScreen.fxml"));
+                Parent root = loader.load();
+                HomeScreenControllerFx controller = loader.getController();
+                controller.setUserData(user);
+                Stage stage = (Stage) gameGrid.getScene().getWindow();
+                // Set the new scene
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        onCloseLiveUpdate(this.getClass().getName());
+    }
+
+    private void onGameEnd() {
+        postScore(points);
+        showMessageDialog("Thông báo", "Game kết thúc! Nhấn ok để xem kết quả");
+    }
+
+    private void postScore(double points) {
+        JsonObject body = new JsonObject();
+        body.addProperty("score", points);
+        doJsonRequest(body, "/postScore");
+    }
+
+    private void onAnswerResult(double point, boolean status, String answer, String type) {
+        if(status){
+            points += point;
+            Platform.runLater(() -> {
+                this.score.setText(""+points);
+            });
+            if(type.equalsIgnoreCase("Cột ngang")){
+                displayAnswerInSquares(answer);
+            }else{
+                displayAnswerVertical(answer);
+            }
+        }else{
+            points += point;
+            points = Math.min(0,points);
+            Platform.runLater(() -> {
+                this.score.setText(""+points);
+            });
+            showMessageDialog("Hê hê", "Bạn trả lời sai rồi!");
+        }
+    }
+
+
+
+    private void showMessageDialog(String title, String message){
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information Dialog");
+            alert.setHeaderText(title);
+            alert.setContentText(message);
+            alert.showAndWait();
+        });
+    }
+    private void onCountDownTime(int timeLeft) {
+        Platform.runLater(()->{
+            timerLabel.setText(String.format("00:%02d",timeLeft));
+        });
+    }
+    private void onReceiveQuestion(Question questionReceive) {
+        displayQuestion(questionReceive);
+        Platform.runLater(()-> {
+            round.setText(String.valueOf(currentRound));
+        });
+    }
+
+    public void setUserData(User user){
+        this.user = user;
+        playerName.setText(user.getFullName());
+    }
     private void initView(){
         if (direction != null && direction.getItems().isEmpty()) {
             direction.getItems().addAll("Cột ngang", "Cột dọc");
         }
-        confirmButton.setOnAction(this::handleConfirm);
-        loadQuestions();
         highlightColumn();
-        displayQuestion();
-    }
-    public void loadQuestions() {
-        questions.add(new QuestionData("Hai số đối nhau có giá trị tuyệt đối … ?", "bangnhau", 1));
-        questions.add(new QuestionData("Ở Hà Nội, phố nào nối phố Đồng Xuân và phố Hàng Ngang, nổi tiếng với ô mai?", "hangluoc", 0));
-        questions.add(new QuestionData("Triều đại nào ở Việt Nam từ năm 1802 đến năm 1945?", "nguyen", 1));
-        questions.add(new QuestionData("Vật dụng nào thường được treo ở cửa để báo hiệu có người đến?", "chuong", 1));
-        questions.add(new QuestionData("Ở các tế bào nhân thực, quá trình hô hấp tế bào diễn ra chủ yếu trong …", "tithe", 3));
-        questions.add(new QuestionData("Loài nào sau đây sống ở môi trường rừng ngập mặn: sú, vẹt, đước, bần?", "tatca", 2));
-        questions.add(new QuestionData("Cảng hàng không quốc tế Long Thành được xây dựng trên địa bàn tỉnh nào?", "dongnai", 0));
-        questions.add(new QuestionData("Màu gì thường được liên tưởng đến cỏ cây, lá, trời quang mây tạnh?", "xanh", 4));
-        questions.add(new QuestionData("Loài chim nào nổi tiếng với màu lông hồng đặc trưng, được tạo ra từ thức ăn của chúng?", "honghac", 2));
-        questions.add(new QuestionData("Vật dụng nhỏ, nhọn, thường làm bằng sắt, dùng để đóng vào gỗ?", "dinh", 5));
-
     }
 
-    /**
-     * Init View for each question
-     */
-    private void displayQuestion() {
-        // Lấy câu hỏi hiện tại và hiển thị
-        QuestionData currentQuestion = questions.get(currentRound);
-        question.setText(currentQuestion.getQuestion());
-        startSquare = currentQuestion.getStartSquare();
-        correctAnswer = currentQuestion.getAnswer();
+    private void displayQuestion(Question currentQuestion) {
+        question.setText(currentQuestion.ques);
+        startSquare = currentQuestion.firstIndex;
+        correctAnswer = currentQuestion.answer;
         inputWord.clear();
-        hideSquares(startSquare, correctAnswer.length());
+        hideSquares(startSquare, correctAnswer.trim().length());
+        currentRound++;
     }
 
     private void hideSquares(int startSquare, int length) {
-        // Ẩn các ô trước ô bắt đầu
+
+        System.out.println(startSquare + " HIHI " + length);
+
         for (int i = 0; i < startSquare; i++) {
             hideSquare(i);
         }
 
-        // Ẩn các ô sau ô cuối cùng của đáp án
         for (int i = startSquare + length; i < 10; i++) {
             hideSquare(i);
         }
@@ -149,57 +228,55 @@ public class CrossWordGameScreenController extends BaseClientController {
 
 
     public void handleConfirm(ActionEvent event) {
-        String word = inputWord.getText();
-        String selectedDirection = direction.getSelectionModel().getSelectedItem();
-
-        if ("Cột ngang".equals(selectedDirection) && word.equalsIgnoreCase(correctAnswer)) {
-            currentScore += 10;
-            score.setText(String.valueOf(currentScore));
-
-            displayAnswerInSquares();
-
-            if (currentRound < questions.size() - 1) {
-                currentRound++;
-                round.setText(String.valueOf(currentRound + 1));
-                displayQuestion();
-            } else {
-                endGame(false);
-            }
-        } else if ("Cột dọc".equals(selectedDirection) && word.equalsIgnoreCase("honghainhi")) {
-            currentScore = 100;
-            score.setText(String.valueOf(currentScore));
-            displayAnswerInSquares(); // Display correct answer in squares for vertical direction
-            endGame(true);
+        String input = inputWord.getText();
+        if(input.isEmpty()){
+            showMessageDialog("Oh no!", "Bạn chưa điền câu trả lời kìaaa");
+        }
+        else if(direction.getValue() == null || direction.getValue().isEmpty()){
+            showMessageDialog("Oh no!", "Bạn chưa điền loại câu hỏi kìaaa");
+        }
+        else{
+            JsonObject body = new JsonObject();
+            body.addProperty("id", currentRound + "");
+            body.addProperty("answer", input);
+            body.addProperty("timeStamp", "" + System.currentTimeMillis());
+            body.addProperty("type", direction.getValue());
+            doJsonRequest(body, "/postAnswer");
         }
     }
 
-    private void displayAnswerInSquares() {
+    private void displayAnswerInSquares(String answer) {
         // Display each character of the correct answer in its corresponding square
-        for (int i = 0; i < correctAnswer.length() ; i++) {
+        for (int i = 0; i < answer.length() ; i++) {
+            Label label = (Label) gameGrid.getChildren().get(startSquare + i + gameGrid.getColumnCount()*(currentRound-1));
+            int index = i;
+            Platform.runLater(()-> {
+                label.setText(String.valueOf(answer.charAt(index)));
+            });
 
-            Label label = (Label) gameGrid.getChildren().get(startSquare + i + gameGrid.getColumnCount()*currentRound);
-            label.setText(String.valueOf(correctAnswer.charAt(i)));
         }
     }
-
-    private void endGame(boolean isWin) {
-        if (countdown != null) {
-            countdown.stop();
+    private void displayAnswerVertical(String answer) {
+        for (int i = 0; i < gameGrid.getRowCount(); i++) {
+            int verticalAnswerIndex = 6;
+            Label label = (Label) gameGrid.getChildren().get(i * gameGrid.getColumnCount() + verticalAnswerIndex);
+            int index = i;
+            Platform.runLater(()-> {
+                label.setText(String.valueOf(answer.charAt(index)));
+            });
         }
+    }
+    private void endGame(boolean isWin) {
         String fxmlFile = isWin || currentScore == 100 ? "/presentation/end_game/WinnerScreen.fxml" : "/presentation/end_game/LoserScreen.fxml";
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
             Parent root = loader.load();
-
             // Tạo một Stage mới và đặt Scene
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle(isWin ? "Congratulations!" : "Game Over");
-
-            // Đóng cửa sổ hiện tại
             Stage currentStage = (Stage) timerLabel.getScene().getWindow();
             currentStage.close();
-
             // Hiển thị màn hình mới
             stage.show();
         } catch (IOException e) {
@@ -209,6 +286,8 @@ public class CrossWordGameScreenController extends BaseClientController {
     }
 
     private void hideSquare(int square) {
+        System.out.println("Delete" + (square + gameGrid.getColumnCount()*currentRound));
+
         Label label = (Label) gameGrid.getChildren().get(square + gameGrid.getColumnCount()*currentRound);
         label.setVisible(false);
     }

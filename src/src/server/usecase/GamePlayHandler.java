@@ -43,13 +43,15 @@ public class GamePlayHandler implements Runnable {
         this.svUC = svUC;
         player1.setGameController(this);
         player2.setGameController(this);
-        initQuestion();
 
     }
 
     private void initQuestion() {
         getListUserAsync()
-                .thenAccept(results -> questions.put("honghainhi", results))
+                .thenAccept(results -> {
+                    questions.put("honghainhi", results);
+                    startGame();
+                })
                 .exceptionally(error -> {
                     System.err.println("Error: " + error);
                     return null;
@@ -58,9 +60,6 @@ public class GamePlayHandler implements Runnable {
 
     public void startGame() {
         JsonObject returnJson = new JsonObject();
-        while(questions.isEmpty()){
-
-        }
         returnJson.addProperty("status", true);
         returnJson.addProperty("message", "Let play");
 
@@ -107,6 +106,8 @@ public class GamePlayHandler implements Runnable {
         JsonObject returnJson = new JsonObject();
         returnJson.addProperty("question", question.ques);
         returnJson.addProperty("id", questionNumber);
+        returnJson.addProperty("answer", question.answer);
+        returnJson.addProperty("startChar", question.firstIndex);
 
 
         player1.sendMessage(returnJson.toString(), "/postQuestion");
@@ -130,13 +131,25 @@ public class GamePlayHandler implements Runnable {
     }
 
     public void receiveAnswer(ClientHandler a, Answer response) {
-        if (response.id.equals((questionNumber.get() - 1) + "")) {
+        System.out.println(response.id + "&&" + questionNumber.get());
+        if (response.id.equals((questionNumber.get()) + "")) {
             if (response.type.equalsIgnoreCase("Cột ngang")) {
                 if (response.answer.equalsIgnoreCase(questions.get("honghainhi").get((questionNumber.get() - 1)).answer)) {
                     JsonObject player1Result = new JsonObject();
                     player1Result.addProperty("status", true);
                     player1Result.addProperty("point", 100);
+                    player1Result.addProperty("answer",response.answer );
+                    player1Result.addProperty("type", response.type);
+
                     a.sendMessage(player1Result.toString(), "/onAnswerReceive");
+
+                    player1Result.addProperty("point", 0);
+                    // Not
+                    if(a.equals(player1)){
+                        player2.sendMessage(player1Result.toString(), "/onAnswerReceive");
+                    }else{
+                        player1.sendMessage(player1Result.toString(), "/onAnswerReceive");
+                    }
                     sendNextQuestion();
                 } else {
                     JsonObject player1Result = new JsonObject();
@@ -150,7 +163,17 @@ public class GamePlayHandler implements Runnable {
                     JsonObject player1Result = new JsonObject();
                     player1Result.addProperty("status", true);
                     player1Result.addProperty("point", 500);
+                    player1Result.addProperty("answer",response.answer );
+                    player1Result.addProperty("type", response.type);
                     a.sendMessage(player1Result.toString(), "/onAnswerReceive");
+
+                    player1Result.addProperty("point", 0);
+                    // Not
+                    if(a.equals(player1)){
+                        player2.sendMessage(player1Result.toString(), "/onAnswerReceive");
+                    }else{
+                        player1.sendMessage(player1Result.toString(), "/onAnswerReceive");
+                    }
                     questionNumber.set(11);
                     sendNextQuestion();
                 }
@@ -193,6 +216,6 @@ public class GamePlayHandler implements Runnable {
     }
     @Override
     public void run() {
-        startGame();
+        initQuestion();
     }
 }
