@@ -8,6 +8,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -18,6 +19,8 @@ import src.ResponseWrapper;
 import src.client.common.BaseClientController;
 import src.client.common.onAction;
 import src.client.data.dto.User;
+import src.client.presentation.end_game.LoserScreenController;
+import src.client.presentation.end_game.WinnerScreenController;
 import src.client.presentation.home_screen.HomeScreenControllerFx;
 import src.model.Question;
 
@@ -111,35 +114,9 @@ public class CrossWordGameScreenController extends BaseClientController {
         initView();
     }
 
-    private void onEndGame(double status) {
-        if (status == 0) {
-            showMessageDialog("Kết quả nè", "Hoà rùi!");
-        } else if (status > 0.0) {
-            showMessageDialog("Kết quả nè", "Winner");
-        } else if (status < 0) {
-            showMessageDialog("Kết quả nè", "Looser");
-        }
-        Platform.runLater(() -> {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("../home_screen/HomeScreen.fxml"));
-                Parent root = loader.load();
-                HomeScreenControllerFx controller = loader.getController();
-                controller.setUserData(user);
-                Stage stage = (Stage) gameGrid.getScene().getWindow();
-                // Set the new scene
-                Scene scene = new Scene(root);
-                stage.setScene(scene);
-                stage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-        onCloseLiveUpdate(this.getClass().getName());
-    }
-
     private void onGameEnd() {
-        postScore(points);
         showMessageDialog("Thông báo", "Game kết thúc! Nhấn ok để xem kết quả");
+        postScore(points);
     }
 
     private void postScore(double points) {
@@ -266,23 +243,64 @@ public class CrossWordGameScreenController extends BaseClientController {
             });
         }
     }
-    private void endGame(boolean isWin) {
-        String fxmlFile = isWin || currentScore == 100 ? "/presentation/end_game/WinnerScreen.fxml" : "/presentation/end_game/LoserScreen.fxml";
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
-            Parent root = loader.load();
-            // Tạo một Stage mới và đặt Scene
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.setTitle(isWin ? "Congratulations!" : "Game Over");
-            Stage currentStage = (Stage) timerLabel.getScene().getWindow();
-            currentStage.close();
-            // Hiển thị màn hình mới
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Lỗi khi tải file FXML: " + fxmlFile);
+    private void onEndGame(double status) {
+        if (status == 0) {
+            showMessageDialog("Kết quả nè", "Hoà rùi!");
+            Platform.runLater(() -> {
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("../home_screen/HomeScreen.fxml"));
+                    Parent root = loader.load();
+                    HomeScreenControllerFx controller = loader.getController();
+                    controller.setUserData(user);
+                    Stage stage = (Stage) gameGrid.getScene().getWindow();
+                    // Set the new scene
+                    Scene scene = new Scene(root);
+                    stage.setScene(scene);
+                    stage.show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+        } else if (status > 0.0) {
+            String fxmlFile = "../end_game/WinnerScreen.fxml";
+            Platform.runLater(() -> {
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+                    Parent root = loader.load();
+                    WinnerScreenController controller = loader.getController();
+                    controller.setUserData(user);
+                    controller.lastPoint = points;
+                    Stage stage = (Stage) gameGrid.getScene().getWindow();
+                    // Set the new scene
+                    Scene scene = new Scene(root);
+                    stage.setScene(scene);
+                    stage.show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+        } else if (status < 0) {
+            String fxmlFile = "../end_game/LoserScreen.fxml";
+            Platform.runLater(() -> {
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+                    Parent root = loader.load();
+                    LoserScreenController controller = loader.getController();
+                    controller.setUserData(user);
+                    controller.lastPoint = points;
+                    Stage stage = (Stage) gameGrid.getScene().getWindow();
+                    // Set the new scene
+                    Scene scene = new Scene(root);
+                    stage.setScene(scene);
+                    stage.show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
         }
+
+
+        onCloseLiveUpdate(this.getClass().getName());
     }
 
     private void hideSquare(int square) {

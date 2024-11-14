@@ -1,16 +1,21 @@
 package src.client.presentation.end_game;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import src.client.common.BaseClientController;
+import src.client.data.dto.User;
+import src.client.presentation.home_screen.HomeScreenControllerFx;
 
 import java.io.IOException;
 
-public class WinnerScreenController {
+public class WinnerScreenController extends BaseClientController {
 
     @FXML
     private Label winnerName;
@@ -20,36 +25,40 @@ public class WinnerScreenController {
 
     @FXML
     private Button logoutButton;
-
+    private User user;
+    public double lastPoint = 0;
+    @FXML
+    public Label scores;
+    @FXML
+    public void initialize(){
+        scores.setText(String.valueOf(lastPoint));
+    }
     // Event handler for the "Continue" button
     @FXML
     public void continueGame(ActionEvent event) throws IOException {
-        try {
-            // Load the HomeScreen FXML file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/presentation/home_screen/HomeScreen.fxml"));
-            Scene scene = new Scene(loader.load());
+        Platform.runLater(() -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("../home_screen/HomeScreen.fxml"));
+                Parent root = loader.load();
+                HomeScreenControllerFx controller = loader.getController();
+                controller.setUserData(user);
+                // Get current stage
+                System.out.println(user.getUsername());
+                Stage stage = (Stage) logoutButton.getScene().getWindow();
 
-            // Set the new scene on the current stage
-            Stage stage = (Stage) continueButton.getScene().getWindow();
-            stage.setScene(scene);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+                // Set the new scene
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        onCloseLiveUpdate(this.getClass().getName());
     }
 
-    // Event handler for the "Log Out" button
-    @FXML
-    public void logout(ActionEvent event) throws IOException {
-        try {
-            // Load the LoginScreen FXML file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/presentation/login/LoginScreen.fxml"));
-            Scene scene = new Scene(loader.load());
 
-            // Set the new scene on the current stage
-            Stage stage = (Stage) logoutButton.getScene().getWindow();
-            stage.setScene(scene);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void setUserData(User user) {
+        this.user = user;
     }
 }
