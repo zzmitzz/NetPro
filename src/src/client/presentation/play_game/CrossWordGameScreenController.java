@@ -255,6 +255,8 @@ public class CrossWordGameScreenController extends BaseClientController {
                     HomeScreenControllerFx controller = loader.getController();
                     controller.setUserData(user);
                     Stage stage = (Stage) gameGrid.getScene().getWindow();
+                    stage.setMinWidth(900);
+                    stage.setMinHeight(600);
                     // Set the new scene
                     Scene scene = new Scene(root);
                     stage.setScene(scene);

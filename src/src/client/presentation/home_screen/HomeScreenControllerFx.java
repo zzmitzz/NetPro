@@ -170,8 +170,8 @@ public class HomeScreenControllerFx extends BaseClientController implements Foun
                     stage.setTitle("Play Game");
 
                     // Set minimum size based on your layout
-                    stage.setMinWidth(720);  // Match BorderPane prefWidth
-                    stage.setMinHeight(640); // Match BorderPane prefHeight
+                    stage.setMinWidth(1024);  // Match BorderPane prefWidth
+                    stage.setMinHeight(768); // Match BorderPane prefHeight
 
                     // Add stage close handler
                     stage.setOnCloseRequest(event -> {
