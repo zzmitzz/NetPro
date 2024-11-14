@@ -18,5 +18,4 @@ public interface onActionServer {
     public List<User> getListUser();
     List<Question> getQuestionByPack(int packOrder);
     void updateUserScore(String username, double scoreBonus);
-//    void
 }

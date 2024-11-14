@@ -102,6 +102,29 @@ public class ServerDBConnection implements DBAction{
         return false;  
     }
 
+    @Override
+    public void updateUserScore(String username, int score) {
+        String updateSQL = "UPDATE user SET score = score + ? WHERE username = ?";
+
+        try (PreparedStatement pstmt = con.prepareStatement(updateSQL)) {
+
+            pstmt.setInt(1, score);
+            pstmt.setString(2, username);
+
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Score updated successfully for user: " + username);
+            } else {
+                System.out.println("No user found with username: " + username);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error updating score: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     public ArrayList<Question> getQuestions(int packOrder) {
         ArrayList<Question> result =  new ArrayList<Question>();
         String query = "Select * FROM quiz Where packOrder = ?";

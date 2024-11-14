@@ -184,7 +184,9 @@ public class CrossWordGameScreenController extends BaseClientController {
         question.setText(currentQuestion.ques);
         startSquare = currentQuestion.firstIndex;
         correctAnswer = currentQuestion.answer;
-        inputWord.clear();
+        Platform.runLater(()->{
+                inputWord.clear();
+        });
         hideSquares(startSquare, correctAnswer.trim().length());
         currentRound++;
     }
@@ -268,8 +270,7 @@ public class CrossWordGameScreenController extends BaseClientController {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
                     Parent root = loader.load();
                     WinnerScreenController controller = loader.getController();
-                    controller.setUserData(user);
-                    controller.lastPoint = points;
+                    controller.setUserData(user,points);
                     Stage stage = (Stage) gameGrid.getScene().getWindow();
                     // Set the new scene
                     Scene scene = new Scene(root);
@@ -286,8 +287,7 @@ public class CrossWordGameScreenController extends BaseClientController {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
                     Parent root = loader.load();
                     LoserScreenController controller = loader.getController();
-                    controller.setUserData(user);
-                    controller.lastPoint = points;
+                    controller.setUserData(user, points);
                     Stage stage = (Stage) gameGrid.getScene().getWindow();
                     // Set the new scene
                     Scene scene = new Scene(root);

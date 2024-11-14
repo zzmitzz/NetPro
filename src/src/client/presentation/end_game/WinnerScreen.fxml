@@ -20,7 +20,7 @@
             </Label>
 
                 <!-- Winner Announcement -->
-                <Label style="-fx-font-family: 'Sans-serif'; -fx-font-size: 40px; -fx-font-weight: bold; -fx-text-fill: white;" text="WINNER CHICKEN WINNER" wrapText="true" />
+                <Label style="-fx-font-family: 'Sans-serif'; -fx-font-size: 40px; -fx-font-weight: bold; -fx-text-fill: white;" text="WINNER WINNER CHICKEN DINNER" wrapText="true" />
 
                 <Label fx:id="winnerName" style="-fx-font-family: 'Sans-serif'; -fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;" text="Winner's Name" wrapText="true" />
 

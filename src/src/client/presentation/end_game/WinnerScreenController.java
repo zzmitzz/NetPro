@@ -31,7 +31,10 @@ public class WinnerScreenController extends BaseClientController {
     public Label scores;
     @FXML
     public void initialize(){
-        scores.setText(String.valueOf(lastPoint));
+        Platform.runLater(() -> {
+            scores.setText(String.valueOf(lastPoint));
+            winnerName.setText(String.valueOf(user.getFullName()));
+        });
     }
     // Event handler for the "Continue" button
     @FXML
@@ -58,7 +61,8 @@ public class WinnerScreenController extends BaseClientController {
     }
 
 
-    public void setUserData(User user) {
+    public void setUserData(User user, double points) {
         this.user = user;
+        this.lastPoint = points;
     }
 }

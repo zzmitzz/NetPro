@@ -33,7 +33,10 @@ public class LoserScreenController extends BaseClientController {
     public Label scores;
     @FXML
     public void initialize(){
-        scores.setText(String.valueOf(lastPoint));
+        Platform.runLater(() -> {
+            scores.setText(String.valueOf(lastPoint));
+            loserName.setText(String.valueOf(user.getFullName()));
+        });
     }
     // Event handler for the "Try Again" button
     @FXML
@@ -60,7 +63,8 @@ public class LoserScreenController extends BaseClientController {
     }
 
 
-    public void setUserData(User user) {
+    public void setUserData(User user, double points) {
         this.user = user;
+        this.lastPoint = points;
     }
 }

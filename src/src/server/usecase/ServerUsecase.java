@@ -34,6 +34,6 @@ public class ServerUsecase implements onActionServer {
 
     @Override
     public void updateUserScore(String username, double scoreBonus) {
-        // TO DO
+        serverDBConnection.updateUserScore(username,(int) scoreBonus);
     }
 }

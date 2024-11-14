@@ -43,7 +43,6 @@ public class GamePlayHandler implements Runnable {
         this.svUC = svUC;
         player1.setGameController(this);
         player2.setGameController(this);
-
     }
 
     private void initQuestion() {
@@ -120,9 +119,11 @@ public class GamePlayHandler implements Runnable {
     public void receiveScore(ClientHandler a, double score){
         System.out.println(score);
         if(a.equals(player1)){
+            svUC.updateUserScore(player1.user.getUsername(), score);
             score1 = score;
         }
         if(a.equals(player2)){
+            svUC.updateUserScore(player2.user.getUsername(), score);
             score2 = score;
         }
         if(score1 != -1 && score2 != -1){
@@ -155,6 +156,7 @@ public class GamePlayHandler implements Runnable {
                     JsonObject player1Result = new JsonObject();
                     player1Result.addProperty("status", false);
                     player1Result.addProperty("point", -40);
+                    player1Result.addProperty("type", response.type);
                     a.sendMessage(player1Result.toString(), "/onAnswerReceive");
                 }
 

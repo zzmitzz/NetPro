@@ -20,7 +20,7 @@
             </Label>
 
                 <!-- Loser Announcement -->
-                <Label style="-fx-font-family: 'Sans-serif'; -fx-font-size: 40px; -fx-font-weight: bold; -fx-text-fill: white;" text="LOOSER LOOSER" wrapText="true" />
+                <Label style="-fx-font-family: 'Sans-serif'; -fx-font-size: 40px; -fx-font-weight: bold; -fx-text-fill: white;" text="LOOSER LOOSER " wrapText="true" />
 
                 <Label fx:id="loserName" style="-fx-font-family: 'Sans-serif'; -fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;" text="Player's Name" wrapText="true" />
 

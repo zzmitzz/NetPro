@@ -29,11 +29,6 @@ import javax.swing.*;
  * @author 1
  */
 public class RegisterScreenController extends BaseClientController {
-    //    private final onActionResponse listener;
-//
-//    public interface onActionResponse {
-//        void registerCallback(String status);
-//    }
     @FXML
     private TextField usr, pwd, confirmed_pwd, fullName;
     @FXML
@@ -136,10 +131,17 @@ public class RegisterScreenController extends BaseClientController {
     }
 
     private void launchLogin() throws IOException{
+        Platform.runLater(() -> {
+           try {
+               FXMLLoader loader = new FXMLLoader(getClass().getResource("../login/LoginScreen.fxml"));
+               Parent root = loader.load();
+               Stage stage = (Stage) loginLink.getScene().getWindow();
+               stage.setScene(new Scene(root));
+           }catch (Exception e){
+
+           }
+        });
+
         onCloseLiveUpdate(getClass().getName());
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../login/LoginScreen.fxml"));
-        Parent root = loader.load();
-        Stage stage = (Stage) loginLink.getScene().getWindow();
-        stage.setScene(new Scene(root));
     }
 }
